@@ -37,3 +37,6 @@ out/
 .vscode/
 
 src/main/resources/.env
+
+### MacOs ###
+.DS_Store
