@@ -8,7 +8,9 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -45,9 +47,9 @@ public class User {
     private Instant createdAt;
 
     @OneToMany(mappedBy = "user")
-    private Set<Product> products = new LinkedHashSet<>();
+    private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Transaction> transactions = new LinkedHashSet<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
 }

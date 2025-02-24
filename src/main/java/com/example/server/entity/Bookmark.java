@@ -20,7 +20,7 @@ public class Bookmark {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private com.example.server.entity.Product product;
+    private Product product;
 
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP")

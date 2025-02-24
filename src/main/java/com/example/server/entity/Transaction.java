@@ -22,7 +22,7 @@ public class Transaction {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.example.server.entity.User user;
+    private User user;
 
     @Size(max = 66)
     @NotNull

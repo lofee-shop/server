@@ -8,7 +8,9 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,7 +26,7 @@ public class Product {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.example.server.entity.User user;
+    private User user;
 
     @Size(max = 255)
     @NotNull
@@ -58,12 +60,12 @@ public class Product {
     private Instant createdAt;
 
     @OneToMany(mappedBy = "product")
-    private Set<Bookmark> bookmarks = new LinkedHashSet<>();
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private Set<Cart> carts = new LinkedHashSet<>();
+    private List<Cart> carts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private Set<com.example.server.entity.ProductThumbnail> productThumbnails = new LinkedHashSet<>();
+    private List<ProductThumbnail> productThumbnails = new ArrayList<>();
 
 }
