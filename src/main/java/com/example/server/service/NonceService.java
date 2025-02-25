@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Random;
 
 @Service
 public class NonceService {
@@ -12,19 +13,18 @@ public class NonceService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    public void saveNonce(String walletAddress, String nonce) {
-        String key = "nonce:" + walletAddress;
-        redisTemplate.opsForValue().set(key, nonce, Duration.ofMinutes(1));
+    public String generateNonce(String walletAddress) {
+        String nonce = String.valueOf(new Random().nextInt(900000) + 100000); // 6자리 랜덤 숫자
+        redisTemplate.opsForValue().set("nonce:" + walletAddress, nonce, Duration.ofMinutes(10)); // 10분 후 자동 삭제
+        return nonce;
     }
 
     public String getNonce(String walletAddress) {
-        String key = "nonce:" + walletAddress;
-        return redisTemplate.opsForValue().get(key);
+        return redisTemplate.opsForValue().get("nonce:" + walletAddress);
     }
 
     public void deleteNonce(String walletAddress) {
-        String key = "nonce:" + walletAddress;
-        redisTemplate.delete(key);
+        redisTemplate.delete("nonce:" + walletAddress);
     }
 }
 

@@ -3,7 +3,9 @@ package com.example.server.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -16,6 +18,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users", schema = "test1")
 public class User {
     @Id
@@ -52,4 +56,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions = new ArrayList<>();
 
+    public User(String walletAddress) {
+        this.walletAddress = walletAddress;
+    }
 }
