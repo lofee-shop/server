@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.dto.CartDTO.CartItem;
-import com.example.server.dto.CartDTO.CartRequest;
-import com.example.server.dto.CartDTO.CartResponse;
+import com.example.server.dto.CartItem;
+import com.example.server.dto.request.CartRequest;
+import com.example.server.dto.response.CartResponse;
 import com.example.server.service.CartService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class CartController {
 
 	private final CartService cartService;
