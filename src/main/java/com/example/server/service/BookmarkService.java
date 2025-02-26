@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.server.dto.BookmarkDTO.BookmarkRequest;
-import com.example.server.dto.BookmarkDTO.BookmarkResponse;
+import com.example.server.dto.request.BookmarkRequest;
+import com.example.server.dto.response.BookmarkResponse;
 import com.example.server.entity.Bookmark;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;

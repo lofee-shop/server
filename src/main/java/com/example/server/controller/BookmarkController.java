@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.dto.BookmarkDTO.BookmarkRequest;
-import com.example.server.dto.BookmarkDTO.BookmarkResponse;
+import com.example.server.dto.request.BookmarkRequest;
+import com.example.server.dto.response.BookmarkResponse;
 import com.example.server.service.BookmarkService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class BookmarkController {
 
 	private final BookmarkService bookmarkService;
