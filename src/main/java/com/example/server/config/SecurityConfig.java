@@ -1,6 +1,7 @@
 package com.example.server.config;
 
 import com.example.server.jwt.JwtAuthFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,26 +16,27 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
-    @Autowired
-    private JwtAuthFilter jwtAuthFilter;
+	@Autowired
+	private JwtAuthFilter jwtAuthFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) //csrf 비활성화
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 사용 x
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()    // auth API는 인증 없이 접근
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-resources/**").permitAll()
-                        .anyRequest().permitAll())// 임시로 모든 API 인증 없이 접근
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); //JWT 필터 추가
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+			.csrf(AbstractHttpConfigurer::disable) //csrf 비활성화
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 사용 x
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/auth/**").permitAll()    // auth API는 인증 없이 접근
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+				.anyRequest().permitAll())// 임시로 모든 API 인증 없이 접근
+			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); //JWT 필터 추가
 
-        return http.build();
-    }
+		return http.build();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws
+		Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
 }
