@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class BookmarkController {
 
 	private final BookmarkService bookmarkService;
@@ -44,7 +44,7 @@ public class BookmarkController {
 		}
 		// 2) productId null → 400
 		if (request.getProductId() == null) {
-			return ResponseEntity.badRequest().body(
+			return ResponseEntity.status(400).body(
 				createErrorResponse("Bad Request", "Product ID must be a number.")
 			);
 		}
