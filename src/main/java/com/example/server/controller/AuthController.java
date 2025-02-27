@@ -17,7 +17,9 @@ import com.example.server.jwt.JwtUtil;
 import com.example.server.repository.UserRepository;
 import com.example.server.service.AuthService;
 import com.example.server.service.NonceService;
+import com.example.server.service.RefreshtokenService;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -33,6 +35,8 @@ public class AuthController {
 	private JwtUtil jwtUtil;
 	@Autowired
 	private NonceService nonceService;
+	@Autowired
+	private RefreshtokenService refreshtokenService;
 
 	@Operation(summary = "nonce 발급 API")
 	@GetMapping("/nonce")
@@ -68,8 +72,32 @@ public class AuthController {
 		String accessToken = jwtUtil.generateAccessToken(user.getId(), signatureRequest.getWalletAddress());
 		String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
+		//refresh 토큰 레디스 저장
+		refreshtokenService.saveRefreshToken(user.getId(), refreshToken);
+
 		return ResponseEntity.ok().body(new AuthResponse(accessToken, refreshToken));
 
 	}
 
+	@PostMapping("/refresh")
+	public ResponseEntity<AuthResponse> refreshAccessToken(@RequestParam String refreshToken) {
+		try {
+			//토큰에서 userid 검출
+			Claims claims = jwtUtil.extractClaims(refreshToken);
+			Long userId = Long.valueOf(claims.getSubject());
+
+			//Redis에서 Refresh Token 확인
+			String storedRefreshToken = refreshtokenService.getRefreshToken(userId);
+			if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+				return ResponseEntity.status(401).build();
+			}
+
+			// ✅ 새로운 Access Token 발급
+			String newAccessToken = jwtUtil.generateAccessToken(userId, "wallet_address");
+			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken));
+
+		} catch (Exception e) {
+			return ResponseEntity.status(401).build();
+		}
+	}
 }

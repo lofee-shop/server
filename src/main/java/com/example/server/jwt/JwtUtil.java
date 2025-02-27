@@ -51,6 +51,10 @@ public class JwtUtil {
 		Claims claims = extractClaims(token);
 		return claims.get("user_id", Long.class);
 	}
+
+	public boolean isTokenExpired(String token) {
+		return extractClaims(token).getExpiration().before(new Date());
+	}
 }
 
 
