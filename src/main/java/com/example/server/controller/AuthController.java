@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.dto.SignatureRequest;
+import com.example.server.dto.request.SignatureRequest;
 import com.example.server.dto.response.AuthResponse;
 import com.example.server.dto.response.NonceResponse;
 import com.example.server.entity.User;
@@ -51,8 +51,7 @@ public class AuthController {
 	public ResponseEntity<AuthResponse> verify(@RequestBody SignatureRequest signatureRequest) {
 
 		//서명검증
-		boolean isValid = authService.verifySignature(signatureRequest.getWalletAddress(),
-			signatureRequest.getNonce(),
+		boolean isValid = authService.verifySignature(signatureRequest.getWalletAddress(), signatureRequest.getNonce(),
 			signatureRequest.getSignature());
 		if (!isValid) {
 			return ResponseEntity.status(401).build();

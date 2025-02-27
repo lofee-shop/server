@@ -1,11 +1,10 @@
 package com.example.server.service;
 
-import org.web3j.crypto.Hash;
+import java.math.BigInteger;
+
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
 
 public class EthereumSignatureService {
 

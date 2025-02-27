@@ -1,4 +1,4 @@
-package com.example.server.dto;
+package com.example.server.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
