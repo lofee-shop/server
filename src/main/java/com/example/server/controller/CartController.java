@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/")
 public class CartController {
 
 	private final CartService cartService;
@@ -48,7 +48,7 @@ public class CartController {
 
 		// (2) productId, quantity 검증
 		if (request.getProductId() == null || request.getQuantity() <= 0) {
-			return ResponseEntity.badRequest()
+			return ResponseEntity.status(400)
 				.body(createErrorResponse("Bad Request", "productId must be a number, quantity must be > 0"));
 		}
 
@@ -68,7 +68,7 @@ public class CartController {
 				"Cart updated successfully",
 				new CartItem(request.getProductId(), request.getQuantity())
 			);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.status(200).body(response);
 		} else {
 			// 새로 추가 → 201 Created
 			cartService.createCartItem(request.getUserId(), request.getProductId(), request.getQuantity());
