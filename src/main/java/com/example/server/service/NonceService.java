@@ -25,7 +25,7 @@ public class NonceService {
 			nonce.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
 		}
 		redisTemplate.opsForValue()
-			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(10)); // 10분 후 자동 삭제
+			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(1000)); // 10분 후 자동 삭제
 		return nonce.toString();
 	}
 

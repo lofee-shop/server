@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.server.dto.request.SignatureRequest;
 import com.example.server.dto.response.AuthResponse;
 import com.example.server.dto.response.NonceResponse;
-import com.example.server.entity.User;
 import com.example.server.jwt.JwtUtil;
 import com.example.server.repository.UserRepository;
 import com.example.server.service.AuthService;
@@ -48,33 +47,11 @@ public class AuthController {
 
 	}
 
+	@SuppressWarnings("checkstyle:WhitespaceAfter")
 	@Operation(summary = "서명검증 및 회원가입/로그인 API")
 	@PostMapping("verify")
 	public AuthResponse verify(@RequestBody SignatureRequest signatureRequest) {
-
-		//서명검증
-		boolean isValid = authService.verifySignature(signatureRequest.getWalletAddress(), signatureRequest.getNonce(),
-			signatureRequest.getSignature());
-		if (!isValid) {
-			return new AuthResponse(false);
-		}
-
-		//사용자 확인
-		User user = userRepository.findByWalletAddress(signatureRequest.getWalletAddress())
-			.orElseGet(() -> { //DB에 없으면 자동 회원가입
-				User newUser = new User(signatureRequest.getWalletAddress());
-				return userRepository.save(newUser);
-			});
-
-		//JWT 토큰 발급
-		String accessToken = jwtUtil.generateAccessToken(user.getId(), signatureRequest.getWalletAddress());
-		String refreshToken = jwtUtil.generateRefreshToken(user.getId());
-
-		//refresh 토큰 레디스 저장
-		refreshtokenService.saveRefreshToken(user.getId(), refreshToken);
-
-		return new AuthResponse(accessToken, refreshToken, true);
-
+		return authService.verifySignature(signatureRequest.getMessage(), signatureRequest.getSignature());
 	}
 
 	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급")
@@ -93,7 +70,7 @@ public class AuthController {
 
 			// ✅ 새로운 Access Token 발급
 			String newAccessToken = jwtUtil.generateAccessToken(userId, "wallet_address");
-			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken, true));
+			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken));
 
 		} catch (Exception e) {
 			return ResponseEntity.status(401).build();
