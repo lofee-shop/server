@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RefreshtokenService {
 
-	@Qualifier("refreshTokenRedisTemplate")
 	@Autowired
+	@Qualifier("refreshTokenRedisTemplate")
 	private StringRedisTemplate redisTemplate;
 
 	public void saveRefreshToken(Long userId, String refreshToken) {
