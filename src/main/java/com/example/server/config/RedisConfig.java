@@ -50,4 +50,11 @@ public class RedisConfig {
 		@Qualifier("refreshTokenRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
 		return new StringRedisTemplate(connectionFactory);
 	}
+
+	//Spring security는 기본 redisTemplate 필요
+	@Bean
+	public StringRedisTemplate redisTemplate(
+		@Qualifier("nonceRedisConnectionFactory") RedisConnectionFactory connectionFactory) {
+		return new StringRedisTemplate(connectionFactory);
+	}
 }
