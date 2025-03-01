@@ -22,7 +22,7 @@ public class EthereumSignatureService {
 			);
 
 			//복원된 공개 키 계싼
-			BigInteger publicKey = Sign.signedMessageToKey(message.getBytes(), signatureData);
+			BigInteger publicKey = Sign.signedMessageToKey(messageHash, signatureData);
 
 			//공개 키 -> 주소
 

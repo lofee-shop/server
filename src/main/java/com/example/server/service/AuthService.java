@@ -18,10 +18,10 @@ public class AuthService {
 		}
 
 		//서명 검증 및 지갑 주소 복원
-		String recoveredNonce = nonceService.getNonce(walletAddress);
+		String recoveredAddress = EthereumSignatureService.recoverAddressFromSignature(nonce, signature);
 
 		//복원된 주소와 입력된 주소 비교
-		if (!walletAddress.equalsIgnoreCase(recoveredNonce)) {
+		if (!walletAddress.equalsIgnoreCase(recoveredAddress)) {
 			return false;
 		}
 
