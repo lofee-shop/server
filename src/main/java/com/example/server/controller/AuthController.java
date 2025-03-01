@@ -52,13 +52,13 @@ public class AuthController {
 
 	@Operation(summary = "서명검증 및 회원가입/로그인 API")
 	@PostMapping("verify")
-	public ResponseEntity<AuthResponse> verify(@RequestBody SignatureRequest signatureRequest) {
+	public AuthResponse verify(@RequestBody SignatureRequest signatureRequest) {
 
 		//서명검증
 		boolean isValid = authService.verifySignature(signatureRequest.getWalletAddress(), signatureRequest.getNonce(),
 			signatureRequest.getSignature());
 		if (!isValid) {
-			return ResponseEntity.status(401).build();
+			return new AuthResponse(false);
 		}
 
 		//사용자 확인
@@ -75,10 +75,11 @@ public class AuthController {
 		//refresh 토큰 레디스 저장
 		refreshtokenService.saveRefreshToken(user.getId(), refreshToken);
 
-		return ResponseEntity.ok().body(new AuthResponse(accessToken, refreshToken));
+		return new AuthResponse(accessToken, refreshToken, true);
 
 	}
 
+	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급")
 	@PostMapping("/refresh")
 	public ResponseEntity<AuthResponse> refreshAccessToken(@RequestParam String refreshToken) {
 		try {
@@ -94,7 +95,7 @@ public class AuthController {
 
 			// ✅ 새로운 Access Token 발급
 			String newAccessToken = jwtUtil.generateAccessToken(userId, "wallet_address");
-			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken));
+			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken, true));
 
 		} catch (Exception e) {
 			return ResponseEntity.status(401).build();
