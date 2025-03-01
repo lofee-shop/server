@@ -2,11 +2,9 @@ package com.example.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.server.dto.request.SignatureRequest;
@@ -38,9 +36,9 @@ public class AuthController {
 	@Autowired
 	private RefreshtokenService refreshtokenService;
 
-	@Operation(summary = "nonce 발급 API")
-	@GetMapping("/nonce")
-	public ResponseEntity<NonceResponse> getNonce(@RequestParam String walletAddress) {
+	@Operation(summary = "nonce 발급 API", description = "지갑 주소 입력")
+	@PostMapping("/nonce")
+	public ResponseEntity<NonceResponse> getNonce(@RequestBody String walletAddress) {
 		if (walletAddress == null || walletAddress.isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -81,7 +79,7 @@ public class AuthController {
 
 	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급")
 	@PostMapping("/refresh")
-	public ResponseEntity<AuthResponse> refreshAccessToken(@RequestParam String refreshToken) {
+	public ResponseEntity<AuthResponse> refreshAccessToken(@RequestBody String refreshToken) {
 		try {
 			//토큰에서 userid 검출
 			Claims claims = jwtUtil.extractClaims(refreshToken);
