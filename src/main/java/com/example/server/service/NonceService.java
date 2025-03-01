@@ -1,7 +1,7 @@
 package com.example.server.service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,14 +11,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class NonceService {
 
-	@Qualifier("nonceRedisTemplate")
 	@Autowired
+	@Qualifier("nonceRedisTemplate")
 	private StringRedisTemplate redisTemplate;
 
+	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	private static final int NONCE_LENGTH = 8;
+	private static final SecureRandom RANDOM = new SecureRandom();
+
 	public String generateNonce(String walletAddress) {
-		String nonce = String.valueOf(new Random().nextInt(900000) + 100000); // 6자리 랜덤 숫자
-		redisTemplate.opsForValue().set("nonce:" + walletAddress, nonce, Duration.ofMinutes(10)); // 10분 후 자동 삭제
-		return nonce;
+		StringBuilder nonce = new StringBuilder(NONCE_LENGTH);
+		for (int i = 0; i < NONCE_LENGTH; i++) {
+			nonce.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
+		}
+		redisTemplate.opsForValue()
+			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(10)); // 10분 후 자동 삭제
+		return nonce.toString();
 	}
 
 	public String getNonce(String walletAddress) {

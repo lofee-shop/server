@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Nonce 응답")
 public class NonceResponse {
-	@Schema(description = "랜덤 Nonce 값", example = "123456")
+	@Schema(description = "랜덤 Nonce 값", example = "ZapLovI7")
 	private String nonce;
 
 	public NonceResponse(String nonce) {
