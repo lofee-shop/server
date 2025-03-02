@@ -47,7 +47,7 @@ public class SecurityConfig {
 	public UrlBasedCorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.setAllowedOrigins(List.of("https://lofee.shop", "http://localhost:3000"));
+		config.setAllowedOrigins(List.of("https://lofee.shop", "http://localhost:5173"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 

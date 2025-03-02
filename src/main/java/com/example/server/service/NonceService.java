@@ -2,11 +2,14 @@ package com.example.server.service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class NonceService {
@@ -20,12 +23,13 @@ public class NonceService {
 	private static final SecureRandom RANDOM = new SecureRandom();
 
 	public String generateNonce(String walletAddress) {
+		walletAddress = extractWalletAddress(walletAddress);
 		StringBuilder nonce = new StringBuilder(NONCE_LENGTH);
 		for (int i = 0; i < NONCE_LENGTH; i++) {
 			nonce.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
 		}
 		redisTemplate.opsForValue()
-			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(1000)); // 10분 후 자동 삭제
+			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(10)); // 10분 후 자동 삭제
 		return nonce.toString();
 	}
 
@@ -35,6 +39,19 @@ public class NonceService {
 
 	public void deleteNonce(String walletAddress) {
 		redisTemplate.delete("nonce:" + walletAddress);
+	}
+
+	private String extractWalletAddress(String walletAddress) {
+		try {
+			if (walletAddress.startsWith("{")) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map<String, String> map = objectMapper.readValue(walletAddress, Map.class);
+				return map.get("walletAddress");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return walletAddress;
 	}
 }
 

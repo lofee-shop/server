@@ -1,6 +1,7 @@
 package com.example.server.service;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ public class AuthService {
 	@Autowired
 	private JwtUtil jwtUtil;
 
+	@SuppressWarnings("checkstyle:WhitespaceAfter")
 	public AuthResponse verifySignature(String message, String signature) {
 
 		String walletAddress = extractWalletAddress(message)
@@ -39,7 +41,6 @@ public class AuthService {
 
 		//서명 검증 및 지갑 주소 복원
 		String recoveredAddress = EthereumSignatureService.recoverAddressFromSignature(message, signature);
-
 		//복원된 주소와 입력된 주소 비교
 		if (!walletAddress.equalsIgnoreCase(recoveredAddress)) {
 			return new AuthResponse(null, null);
@@ -51,7 +52,8 @@ public class AuthService {
 		//사용자 확인
 		User user = userRepository.findByWalletAddress(walletAddress)
 			.orElseGet(() -> { //DB에 없으면 자동 회원가입
-				User newUser = new User(walletAddress);
+				User newUser = new User(walletAddress, "buyer", true);
+				newUser.setNickname("buyer" + new Random().nextInt(900000) + 100000);
 				return userRepository.save(newUser);
 			});
 
