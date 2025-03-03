@@ -22,6 +22,8 @@ public class AuthService {
 	UserRepository userRepository;
 	@Autowired
 	private JwtUtil jwtUtil;
+	@Autowired
+	private RefreshtokenService refreshtokenService;
 
 	@SuppressWarnings("checkstyle:WhitespaceAfter")
 	public AuthResponse verifySignature(String message, String signature) {
@@ -41,6 +43,7 @@ public class AuthService {
 
 		//서명 검증 및 지갑 주소 복원
 		String recoveredAddress = EthereumSignatureService.recoverAddressFromSignature(message, signature);
+
 		//복원된 주소와 입력된 주소 비교
 		if (!walletAddress.equalsIgnoreCase(recoveredAddress)) {
 			return new AuthResponse(null, null);
@@ -61,6 +64,8 @@ public class AuthService {
 		String accessToken = jwtUtil.generateAccessToken(user.getId(), walletAddress);
 		String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
+		//refreshToken 저장
+		refreshtokenService.saveRefreshToken(user.getId(), refreshToken);
 		return new AuthResponse(accessToken, refreshToken);
 	}
 

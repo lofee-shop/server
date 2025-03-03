@@ -11,10 +11,10 @@ import com.example.server.dto.request.SignatureRequest;
 import com.example.server.dto.response.AuthResponse;
 import com.example.server.dto.response.NonceResponse;
 import com.example.server.jwt.JwtUtil;
-import com.example.server.repository.UserRepository;
 import com.example.server.service.AuthService;
 import com.example.server.service.NonceService;
 import com.example.server.service.RefreshtokenService;
+import com.example.server.service.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,13 +27,13 @@ public class AuthController {
 	@Autowired
 	private AuthService authService;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
 	private NonceService nonceService;
 	@Autowired
 	private RefreshtokenService refreshtokenService;
+	@Autowired
+	private UserService userService;
 
 	@Operation(summary = "nonce 발급 API", description = "지갑 주소 입력")
 	@PostMapping("/nonce")
@@ -47,11 +47,17 @@ public class AuthController {
 
 	}
 
-	@SuppressWarnings("checkstyle:WhitespaceAfter")
 	@Operation(summary = "서명검증 및 회원가입/로그인 API")
 	@PostMapping("verify")
 	public AuthResponse verify(@RequestBody SignatureRequest signatureRequest) {
 		return authService.verifySignature(signatureRequest.getMessage(), signatureRequest.getSignature());
+	}
+
+	@Operation(summary = "로그아웃 API")
+	@PostMapping("logout")
+	public void logout(@RequestBody String walletAddress) {
+		Long userid = userService.findUserIdbyWalletAddress(walletAddress);
+		refreshtokenService.deleteRefreshToken(userid);
 	}
 
 	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급")
@@ -68,8 +74,9 @@ public class AuthController {
 				return ResponseEntity.status(401).build();
 			}
 
-			// ✅ 새로운 Access Token 발급
-			String newAccessToken = jwtUtil.generateAccessToken(userId, "wallet_address");
+			//새로운 Access Token 발급
+			String wallet_address = userService.findWalletAddressByUserId(userId);
+			String newAccessToken = jwtUtil.generateAccessToken(userId, wallet_address);
 			return ResponseEntity.ok().body(new AuthResponse(newAccessToken, refreshToken));
 
 		} catch (Exception e) {

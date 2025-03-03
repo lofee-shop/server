@@ -8,4 +8,6 @@ import com.example.server.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByWalletAddress(String walletAddress);
+
+	Optional<User> findById(Long userid);
 }
