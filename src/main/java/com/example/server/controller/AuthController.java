@@ -76,9 +76,10 @@ public class AuthController {
 		refreshtokenService.deleteRefreshToken(userid);
 	}
 
-	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급")
+	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급", description = "swagger 상에선 실제로 쿠키 넣어줘야 테스트 가능")
 	@PostMapping("/refresh")
-	public ResponseEntity<AuthResponse> refreshAccessToken(@CookieValue(value = "refreshToken") String refreshToken) {
+	public ResponseEntity<AuthResponse> refreshAccessToken(
+		@CookieValue(value = "refreshToken", required = false) String refreshToken) {
 		if (refreshToken == null || refreshToken.isEmpty()) {
 			return ResponseEntity.status(401).build();
 		}
