@@ -52,6 +52,11 @@ public class JwtUtil {
 		return claims.get("user_id", Long.class);
 	}
 
+	public String extractWalletAddress(String token) {
+		Claims claims = extractClaims(token);
+		return claims.get("wallet_address", String.class);
+	}
+
 	public boolean isTokenExpired(String token) {
 		return extractClaims(token).getExpiration().before(new Date());
 	}
