@@ -8,10 +8,11 @@ import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -44,9 +45,9 @@ public class User {
 	private String nickname;
 
 	@NotNull
-	@Lob
+	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
-	private String role;
+	private Role role;
 
 	@NotNull
 	@Column(name = "is_active", nullable = false)
@@ -62,7 +63,7 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions = new ArrayList<>();
 
-	public User(String walletAddress, String role, Boolean isActive) {
+	public User(String walletAddress, Role role, Boolean isActive) {
 		this.walletAddress = walletAddress;
 		this.role = role;
 		this.isActive = isActive;

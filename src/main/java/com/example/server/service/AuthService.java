@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.server.dto.response.AuthResponse;
+import com.example.server.entity.Role;
 import com.example.server.entity.User;
 import com.example.server.jwt.JwtUtil;
 import com.example.server.repository.UserRepository;
@@ -55,7 +56,7 @@ public class AuthService {
 		//사용자 확인
 		User user = userRepository.findByWalletAddress(walletAddress)
 			.orElseGet(() -> { //DB에 없으면 자동 회원가입
-				User newUser = new User(walletAddress, "buyer", true);
+				User newUser = new User(walletAddress, Role.BUYER, true);
 				newUser.setNickname("buyer" + new Random().nextInt(900000) + 100000);
 				return userRepository.save(newUser);
 			});
