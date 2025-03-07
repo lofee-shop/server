@@ -8,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,14 +37,21 @@ public class User {
 	private String walletAddress;
 
 	@Size(max = 50)
-	@NotNull
-	@Column(name = "nickname", nullable = false, length = 50)
+	@Column(name = "nickname", nullable = true, length = 50)
 	private String nickname;
+
+	@Column(name = "profile_img", nullable = true)
+	private String profileImg;
+
+	@Size(max = 100)
+	@Column(name = "introduction", nullable = true, length = 100)
+	private String introduction;
 
 	@NotNull
 	@Lob
+	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
-	private String role;
+	private Role role;
 
 	@NotNull
 	@Column(name = "is_active", nullable = false)
