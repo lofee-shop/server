@@ -5,13 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.server.common.exception.CustomException;
+import com.example.server.common.exception.ResponseCode;
 import com.example.server.dto.request.AddressRequestDto;
 import com.example.server.dto.response.AddressResponseDto;
 import com.example.server.dto.response.AddressesResponseDto;
 import com.example.server.entity.Address;
 import com.example.server.entity.User;
-import com.example.server.exception.CustomException;
-import com.example.server.exception.ErrorCode;
 import com.example.server.repository.AddressRepository;
 import com.example.server.repository.UserRepository;
 
@@ -25,9 +25,9 @@ public class AddressService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public AddressResponseDto addAddress(Long userId, AddressRequestDto requestDto) {
+	public void addAddress(Long userId, AddressRequestDto requestDto) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 user_id를 가진 사용자가 없습니다."));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
 		Address address = new Address(
 			user,
@@ -38,7 +38,6 @@ public class AddressService {
 		);
 
 		addressRepository.save(address);
-		return new AddressResponseDto(address);
 	}
 
 	@Transactional(readOnly = true)
@@ -54,7 +53,7 @@ public class AddressService {
 	@Transactional
 	public void deleteAddress(Long addressId) {
 		Address address = addressRepository.findById(addressId)
-			.orElseThrow(() -> new CustomException(ErrorCode.ADDRESS_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(ResponseCode.ADDRESS_NOT_FOUND));
 
 		addressRepository.delete(address);
 	}

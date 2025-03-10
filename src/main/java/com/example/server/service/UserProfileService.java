@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.server.common.exception.CustomException;
+import com.example.server.common.exception.ResponseCode;
 import com.example.server.dto.request.UserProfileRequestDto;
 import com.example.server.dto.response.UserProfileResponseDto;
 import com.example.server.entity.User;
@@ -22,19 +24,20 @@ import lombok.RequiredArgsConstructor;
 public class UserProfileService {
 
 	private final UserRepository userRepository;
+	public static final String PROFILE_UPLOAD_DIR = "/uploads/profile/";
 	private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/profile/";
 
 	@Transactional(readOnly = true)
 	public UserProfileResponseDto getUserProfile(Long userId) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 user_id를 가진 사용자가 없습니다."));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		return new UserProfileResponseDto(user);
 	}
 
 	@Transactional
 	public UserProfileResponseDto updateProfile(UserProfileRequestDto requestDto) {
 		User user = userRepository.findById(requestDto.getUserId())
-			.orElseThrow(() -> new IllegalArgumentException("해당 user_id를 사진 사용자가 없습니다."));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
 		user.setNickname(requestDto.getNickname());
 		user.setIntroduction(requestDto.getIntroduction());
@@ -47,7 +50,7 @@ public class UserProfileService {
 	@Transactional
 	public String uploadProfileImage(MultipartFile file) throws IOException {
 		if (file.isEmpty()) {
-			throw new IllegalArgumentException("파일이 비어있습니다.");
+			throw new CustomException(ResponseCode.FILE_UPLOAD_FAILED);
 		}
 
 		String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -59,6 +62,6 @@ public class UserProfileService {
 		}
 
 		file.transferTo(path.toFile());
-		return "/uploads/profile/" + fileName;
+		return PROFILE_UPLOAD_DIR + fileName;
 	}
 }
