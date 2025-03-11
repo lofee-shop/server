@@ -56,24 +56,32 @@ public class AuthController {
 		@ApiResponse(responseCode = "200", headers = {
 			@Header(name = HttpHeaders.SET_COOKIE, description = "Refresh Token"),
 			@Header(name = HttpHeaders.AUTHORIZATION, description = "Access Token")
-		})
+		}),
+		@ApiResponse(responseCode = "402", description = "서명 검증 실패")
 	})
 	@PostMapping("verify")
-	public ResponseEntity<Void> verify(@RequestBody SignatureRequest signatureRequest) {
-		AuthResponse authResponse = authService.verifySignature(signatureRequest.getMessage(),
-			signatureRequest.getSignature());
+	public ResponseEntity<Boolean> verify(@RequestBody SignatureRequest signatureRequest) {
+		try {
+			AuthResponse authResponse = authService.verifySignature(signatureRequest.getMessage(),
+				signatureRequest.getSignature());
 
-		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
-			.httpOnly(true)
-			.secure(true) //로컬 개발시 false
-			.path("/")
-			.maxAge(14 * 24 * 60 * 60) //14일 유지
-			.build();
+			if (authResponse.getAccessToken() == null || authResponse.getRefreshToken() == null)
+				return ResponseEntity.status(402).body(false);
 
-		return ResponseEntity.ok()
-			.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-			.header(HttpHeaders.AUTHORIZATION, "Bearer " + authResponse.getAccessToken())
-			.build();
+			ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
+				.httpOnly(true)
+				.secure(true) //로컬 개발시 false
+				.path("/")
+				.maxAge(14 * 24 * 60 * 60) //14일 유지
+				.build();
+
+			return ResponseEntity.ok()
+				.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + authResponse.getAccessToken())
+				.body(true);
+		} catch (Exception e) {
+			return ResponseEntity.status(401).body(false);
+		}
 
 	}
 
