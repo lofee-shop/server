@@ -21,6 +21,8 @@ import com.example.server.service.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -50,9 +52,14 @@ public class AuthController {
 
 	}
 
-	@Operation(summary = "서명검증 및 회원가입/로그인 API")
+	@Operation(summary = "서명검증 및 회원가입/로그인 API", responses = {
+		@ApiResponse(responseCode = "200", headers = {
+			@Header(name = HttpHeaders.SET_COOKIE, description = "Refresh Token"),
+			@Header(name = HttpHeaders.AUTHORIZATION, description = "Access Token")
+		})
+	})
 	@PostMapping("verify")
-	public ResponseEntity<AuthResponse> verify(@RequestBody SignatureRequest signatureRequest) {
+	public ResponseEntity<Void> verify(@RequestBody SignatureRequest signatureRequest) {
 		AuthResponse authResponse = authService.verifySignature(signatureRequest.getMessage(),
 			signatureRequest.getSignature());
 
@@ -65,7 +72,8 @@ public class AuthController {
 
 		return ResponseEntity.ok()
 			.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-			.body(authResponse);
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + authResponse.getAccessToken())
+			.build();
 
 	}
 

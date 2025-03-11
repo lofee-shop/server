@@ -37,6 +37,7 @@ public class AuthService {
 
 		//Redis에 저장된 nonce 가져오기
 		String storedNonce = nonceService.getNonce(walletAddress);
+		System.out.println(storedNonce);
 		//Redis에 저장된 nonce와 다르면 인증 x
 		if (storedNonce == null || !storedNonce.equals(nonce)) {
 			return new AuthResponse(null, null);
@@ -44,6 +45,7 @@ public class AuthService {
 
 		//서명 검증 및 지갑 주소 복원
 		String recoveredAddress = EthereumSignatureService.recoverAddressFromSignature(message, signature);
+		System.out.println(recoveredAddress);
 
 		//복원된 주소와 입력된 주소 비교
 		if (!walletAddress.equalsIgnoreCase(recoveredAddress)) {
