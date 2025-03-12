@@ -36,26 +36,26 @@ public class Transaction {
 
 	@Size(max = 66)
 	@NotNull
-	@Column(name = "tx_hash", nullable = false, length = 66)
+	@Column(nullable = false, length = 66)
 	private String txHash;
 
 	@Size(max = 50)
 	@NotNull
-	@Column(name = "network", nullable = false, length = 50)
+	@Column(nullable = false, length = 50)
 	private String network;
 
 	@NotNull
 	@Lob
-	@Column(name = "status", nullable = false)
+	@Column(nullable = false)
 	private String status;
 
 	@NotNull
-	@Column(name = "total_amount", nullable = false)
+	@Column(nullable = false)
 	private Float totalAmount;
 
 	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at", nullable = false)
+	@Column(nullable = false)
 	private Instant createdAt;
 
 }
