@@ -29,12 +29,12 @@ public class Cart {
 
 	@NotNull
 	@ColumnDefault("1")
-	@Column(name = "quantity", nullable = false)
+	@Column(nullable = false)
 	private Integer quantity;
 
 	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at", nullable = false)
+	@Column(nullable = false)
 	private Instant createdAt;
 
 }

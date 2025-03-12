@@ -9,28 +9,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "address", schema = "test1")
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "address_id")
+	@Column(name = "address_id", nullable = false)
 	private Long id;
 
-	@Column(name = "real_name", nullable = true)
 	private String realName;
 
-	@Column(name = "phone_number", nullable = true)
 	private String phoneNumber;
 
-	@Column(name = "address", nullable = true)
 	private String address;
 
-	@Column(name = "postal_code", nullable = true)
 	private String postalCode;
 
 	@ManyToOne

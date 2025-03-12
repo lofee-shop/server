@@ -5,19 +5,20 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.server.common.exception.CustomException;
-import com.example.server.common.exception.ResponseCode;
 import com.example.server.dto.request.AddressRequestDto;
 import com.example.server.dto.response.AddressResponseDto;
 import com.example.server.dto.response.AddressesResponseDto;
 import com.example.server.entity.Address;
 import com.example.server.entity.User;
+import com.example.server.exception.CustomException;
+import com.example.server.exception.ResponseCode;
 import com.example.server.repository.AddressRepository;
 import com.example.server.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AddressService {
 
@@ -40,7 +41,6 @@ public class AddressService {
 		addressRepository.save(address);
 	}
 
-	@Transactional(readOnly = true)
 	public AddressesResponseDto getAddresses(Long userId) {
 		List<AddressResponseDto> addresses = addressRepository.findByUserId(userId)
 			.stream()

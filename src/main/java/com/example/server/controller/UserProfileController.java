@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.server.common.exception.CustomException;
-import com.example.server.common.exception.ResponseCode;
-import com.example.server.common.response.ResponseDto;
 import com.example.server.dto.request.UserProfileRequestDto;
 import com.example.server.dto.response.UserProfileResponseDto;
 import com.example.server.service.UserProfileService;
@@ -41,13 +38,9 @@ public class UserProfileController {
 		@ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.")
 	})
 	@GetMapping("/{userId}")
-	public ResponseEntity<ResponseDto<UserProfileResponseDto>> getUserProfile(@PathVariable Long userId) {
-		try {
-			UserProfileResponseDto responseDto = userProfileService.getUserProfile(userId);
-			return ResponseEntity.ok(ResponseDto.success(ResponseCode.SUCCESS, responseDto));
-		} catch (CustomException e) {
-			return ResponseEntity.ok(ResponseDto.fail(e.getResponseCode()));
-		}
+	public ResponseEntity<UserProfileResponseDto> getUserProfile(@PathVariable Long userId) {
+		UserProfileResponseDto responseDto = userProfileService.getUserProfile(userId);
+		return ResponseEntity.ok(responseDto);
 	}
 
 	@Operation(summary = "프로필 정보 수정", description = "사용자의 프로필 정보를 업데이트합니다.")
@@ -56,31 +49,22 @@ public class UserProfileController {
 		@ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.")
 	})
 	@PutMapping("/update")
-	public ResponseEntity<ResponseDto<Void>> updateUserProfile(
+	public ResponseEntity<UserProfileResponseDto> updateUserProfile(
 		@RequestBody UserProfileRequestDto requestDto) {
-		try {
-			UserProfileResponseDto responseDto = userProfileService.updateProfile(requestDto);
-			return ResponseEntity.ok(ResponseDto.success(ResponseCode.CREATED));
-		} catch (CustomException e) {
-			return ResponseEntity.ok(ResponseDto.fail(e.getResponseCode()));
-		}
+		UserProfileResponseDto responseDto = userProfileService.updateProfile(requestDto);
+		return ResponseEntity.status(201).body(responseDto);
 	}
 
 	@Operation(summary = "프로필 이미지 업로드", description = "사용자의 프로필 이미지를 업로드합니다.")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "201", description = "이미지 업로드 성공",
 			content = @Content(schema = @Schema(implementation = String.class))),
-		@ApiResponse(responseCode = "400", description = "파일 업로드 실패")
+		@ApiResponse(responseCode = "400", description = "파일 업로드 실패"),
+		@ApiResponse(responseCode = "500", description = "서버 오류")
 	})
 	@PostMapping("/upload-image")
-	public ResponseEntity<ResponseDto<String>> uploadProfileImage(@RequestParam("file") MultipartFile file) {
-		try {
-			String filePath = userProfileService.uploadProfileImage(file);
-			return ResponseEntity.ok(ResponseDto.success(ResponseCode.CREATED, filePath));
-		} catch (CustomException e) {
-			return ResponseEntity.ok(ResponseDto.fail(e.getResponseCode()));
-		} catch (IOException e) {
-			return ResponseEntity.ok(ResponseDto.fail(ResponseCode.FILE_UPLOAD_FAILED));
-		}
+	public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file) throws IOException {
+		String filePath = userProfileService.uploadProfileImage(file);
+		return ResponseEntity.status(201).body(filePath);
 	}
 }

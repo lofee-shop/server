@@ -1,7 +1,7 @@
 package com.example.server.dto.response;
 
-import com.example.server.entity.Role;
 import com.example.server.entity.User;
+import com.example.server.entity.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
