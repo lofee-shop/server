@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CartService {
 
 	private final CartRepository cartRepository;
@@ -38,7 +39,6 @@ public class CartService {
 	/**
 	 * 2) 장바구니 수량 업데이트 (이미 있는 상품)
 	 */
-	@Transactional
 	public void updateCartItemQuantity(Long userId, Long productId, int quantityToAdd) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NoSuchElementException("User not found"));
@@ -56,7 +56,6 @@ public class CartService {
 	/**
 	 * 3) 장바구니 새 항목 생성
 	 */
-	@Transactional
 	public void createCartItem(Long userId, Long productId, int quantity) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new NoSuchElementException("User not found"));

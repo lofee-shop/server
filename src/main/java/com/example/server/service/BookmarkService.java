@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookmarkService {
 
 	private final BookmarkRepository bookmarkRepository;
@@ -27,13 +28,12 @@ public class BookmarkService {
 	/**
 	 * 상품 북마크(추가)
 	 */
-	@Transactional
 	public BookmarkResponse addBookmark(BookmarkRequest request) {
 		// 1) 유저 & 상품 조회
-		User user = userRepository.findById(request.getUserId())
+		User user = userRepository.findById(request.userId())
 			.orElseThrow(() -> new NoSuchElementException("User not found"));
 
-		Product product = productRepository.findById(request.getProductId())
+		Product product = productRepository.findById(request.productId())
 			.orElseThrow(() -> new NoSuchElementException("Product not found"));
 
 		// 2) 이미 북마크되었는지 확인
