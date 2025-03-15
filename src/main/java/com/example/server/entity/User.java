@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.example.server.entity.enums.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
