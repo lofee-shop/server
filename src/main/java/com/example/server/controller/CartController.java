@@ -41,40 +41,40 @@ public class CartController {
 	public ResponseEntity<?> addToCart(@RequestBody CartRequest request) {
 
 		// (1) userId 확인 → 비로그인 사용자
-		if (request.getUserId() == null) {
+		if (request.userId() == null) {
 			return ResponseEntity.status(403)
 				.body(createErrorResponse("Forbidden", "You must be logged in to add items to the cart."));
 		}
 
 		// (2) productId, quantity 검증
-		if (request.getProductId() == null || request.getQuantity() <= 0) {
+		if (request.productId() == null || request.quantity() <= 0) {
 			return ResponseEntity.status(400)
 				.body(createErrorResponse("Bad Request", "productId must be a number, quantity must be > 0"));
 		}
 
 		// (3) 재고 부족 예시(가정)
-		if (request.getQuantity() > 10) {
+		if (request.quantity() > 10) {
 			return ResponseEntity.status(409)
 				.body(createErrorResponse("Conflict", "Requested quantity exceeds available stock."));
 		}
 
 		// (4) 실제 DB 로직
-		boolean alreadyInCart = cartService.hasCartItem(request.getUserId(), request.getProductId());
+		boolean alreadyInCart = cartService.hasCartItem(request.userId(), request.productId());
 
 		if (alreadyInCart) {
 			// 이미 장바구니에 있음 → 수량 업데이트 → 200 OK
-			cartService.updateCartItemQuantity(request.getUserId(), request.getProductId(), request.getQuantity());
+			cartService.updateCartItemQuantity(request.userId(), request.productId(), request.quantity());
 			CartResponse response = new CartResponse(
 				"Cart updated successfully",
-				new CartItem(request.getProductId(), request.getQuantity())
+				new CartItem(request.productId(), request.quantity())
 			);
 			return ResponseEntity.status(200).body(response);
 		} else {
 			// 새로 추가 → 201 Created
-			cartService.createCartItem(request.getUserId(), request.getProductId(), request.getQuantity());
+			cartService.createCartItem(request.userId(), request.productId(), request.quantity());
 			CartResponse response = new CartResponse(
 				"Product added to cart",
-				new CartItem(request.getProductId(), request.getQuantity())
+				new CartItem(request.productId(), request.quantity())
 			);
 			return ResponseEntity.status(201).body(response);
 		}

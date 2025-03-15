@@ -15,16 +15,14 @@ import com.example.server.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/")
 public class BookmarkController {
 
 	private final BookmarkService bookmarkService;
-
-	public BookmarkController(BookmarkService bookmarkService) {
-		this.bookmarkService = bookmarkService;
-	}
 
 	@Operation(summary = "상품 북마크")
 	@ApiResponses({
@@ -37,13 +35,13 @@ public class BookmarkController {
 	@PostMapping("/bookmarks")
 	public ResponseEntity<?> addBookmark(@RequestBody BookmarkRequest request) {
 		// 1) userId null → 403
-		if (request.getUserId() == null) {
+		if (request.userId() == null) {
 			return ResponseEntity.status(403).body(
 				createErrorResponse("Forbidden", "You must be logged in to bookmark items.")
 			);
 		}
 		// 2) productId null → 400
-		if (request.getProductId() == null) {
+		if (request.productId() == null) {
 			return ResponseEntity.status(400).body(
 				createErrorResponse("Bad Request", "Product ID must be a number.")
 			);
