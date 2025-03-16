@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.server.dto.request.LogoutRequest;
 import com.example.server.dto.request.SignatureRequest;
 import com.example.server.dto.response.AuthResponse;
 import com.example.server.dto.response.NonceResponse;
@@ -81,8 +82,8 @@ public class AuthController {
 
 	@Operation(summary = "로그아웃 API")
 	@PostMapping("logout")
-	public void logout(@RequestBody String walletAddress) {
-		Long userid = userService.findUserIdbyWalletAddress(walletAddress);
+	public void logout(@RequestBody LogoutRequest request) {
+		Long userid = userService.findUserIdbyWalletAddress(request.walletAddress());
 		refreshtokenService.deleteRefreshToken(userid);
 	}
 
