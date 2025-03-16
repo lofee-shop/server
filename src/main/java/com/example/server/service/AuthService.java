@@ -5,28 +5,28 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.server.dto.response.AuthResponse;
-import com.example.server.entity.Role;
 import com.example.server.entity.User;
+import com.example.server.entity.enums.Role;
 import com.example.server.jwt.JwtUtil;
 import com.example.server.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class AuthService {
 
-	@Autowired
-	NonceService nonceService;
-	@Autowired
-	UserRepository userRepository;
-	@Autowired
-	private JwtUtil jwtUtil;
-	@Autowired
-	private RefreshtokenService refreshtokenService;
+	private final NonceService nonceService;
+	private final UserRepository userRepository;
+	private final JwtUtil jwtUtil;
+	private final RefreshtokenService refreshtokenService;
 
-	@SuppressWarnings("checkstyle:WhitespaceAfter")
+	@Transactional
 	public AuthResponse verifySignature(String message, String signature) {
 
 		String walletAddress = extractWalletAddress(message)

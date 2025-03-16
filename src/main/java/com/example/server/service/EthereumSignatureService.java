@@ -2,10 +2,14 @@ package com.example.server.service;
 
 import java.math.BigInteger;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
+@Service
+@Transactional(readOnly = true)
 public class EthereumSignatureService {
 
 	public static String recoverAddressFromSignature(String message, String signature) {

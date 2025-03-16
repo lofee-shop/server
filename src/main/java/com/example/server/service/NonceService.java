@@ -4,24 +4,28 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class NonceService {
 
-	@Autowired
 	@Qualifier("nonceRedisTemplate")
-	private StringRedisTemplate redisTemplate;
+	private final StringRedisTemplate redisTemplate;
 
 	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private static final int NONCE_LENGTH = 8;
 	private static final SecureRandom RANDOM = new SecureRandom();
 
+	@Transactional
 	public String generateNonce(String walletAddress) {
 		walletAddress = extractWalletAddress(walletAddress);
 		StringBuilder nonce = new StringBuilder(NONCE_LENGTH);
@@ -37,6 +41,7 @@ public class NonceService {
 		return redisTemplate.opsForValue().get("nonce:" + walletAddress);
 	}
 
+	@Transactional
 	public void deleteNonce(String walletAddress) {
 		redisTemplate.delete("nonce:" + walletAddress);
 	}
