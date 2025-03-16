@@ -52,6 +52,11 @@ public class JwtUtil {
 		return claims.get("user_id", Long.class);
 	}
 
+	public Long extractUserIdFromRefreshToken(String refreshToken) {
+		Claims claims = extractClaims(refreshToken);
+		return Long.parseLong(claims.getSubject());
+	}
+
 	public String extractWalletAddress(String token) {
 		Claims claims = extractClaims(token);
 		return claims.get("wallet_address", String.class);

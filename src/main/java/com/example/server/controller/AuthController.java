@@ -95,12 +95,12 @@ public class AuthController {
 		}
 
 		//토큰에서 userid 검출
-		Long userId = jwtUtil.extractUserId(refreshToken);
+		Long userId = jwtUtil.extractUserIdFromRefreshToken(refreshToken);
 
 		//Redis에서 Refresh Token 확인
 		String storedRefreshToken = refreshtokenService.getRefreshToken(userId);
 		if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-			return ResponseEntity.status(401).build();
+			throw new CustomException(ResponseCode.USER_NOT_FOUND);
 		}
 
 		//새로운 Access Token 발급
