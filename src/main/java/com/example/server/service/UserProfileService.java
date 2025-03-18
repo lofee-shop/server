@@ -31,16 +31,28 @@ public class UserProfileService {
 	public UserProfileResponseDto getUserProfile(Long userId) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-		return new UserProfileResponseDto(user);
+		return new UserProfileResponseDto(
+			user.getId(),
+			user.getNickname(),
+			user.getIntroduction(),
+			user.getProfileImg(),
+			user.getRole()
+		);
 	}
 
 	@Transactional
 	public UserProfileResponseDto updateProfile(UserProfileRequestDto requestDto) {
-		User user = userRepository.findById(requestDto.getUserId())
+		User user = userRepository.findById(requestDto.userId())
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
-		user.updateProfile(requestDto.getNickname(), requestDto.getIntroduction(), requestDto.getProfileImg());
-		return new UserProfileResponseDto(user);
+		user.updateProfile(requestDto.nickname(), requestDto.introduction(), requestDto.profileImg());
+		return new UserProfileResponseDto(
+			user.getId(),
+			user.getNickname(),
+			user.getIntroduction(),
+			user.getProfileImg(),
+			user.getRole()
+		);
 	}
 
 	@Transactional

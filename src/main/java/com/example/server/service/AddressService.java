@@ -32,10 +32,10 @@ public class AddressService {
 
 		Address address = new Address(
 			user,
-			requestDto.getRealName(),
-			requestDto.getPhoneNumber(),
-			requestDto.getAddress(),
-			requestDto.getPostalCode()
+			requestDto.realName(),
+			requestDto.phoneNumber(),
+			requestDto.address(),
+			requestDto.postalCode()
 		);
 
 		addressRepository.save(address);
@@ -44,7 +44,14 @@ public class AddressService {
 	public AddressesResponseDto getAddresses(Long userId) {
 		List<AddressResponseDto> addresses = addressRepository.findByUserId(userId)
 			.stream()
-			.map(AddressResponseDto::new)
+			.map(address -> new AddressResponseDto(
+				address.getId(),
+				address.getRealName(),
+				address.getPhoneNumber(),
+				address.getPhoneNumber(),
+				address.getPostalCode(),
+				address.getUser().getId()
+			))
 			.toList();
 
 		return new AddressesResponseDto(addresses);
