@@ -2,7 +2,6 @@ package com.example.server.config;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +16,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.server.jwt.JwtAuthFilter;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-	@Autowired
-	private JwtAuthFilter jwtAuthFilter;
+
+	private final JwtAuthFilter jwtAuthFilter;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
