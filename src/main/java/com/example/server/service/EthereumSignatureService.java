@@ -8,6 +8,9 @@ import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
+import com.example.server.exception.CustomException;
+import com.example.server.exception.ResponseCode;
+
 @Service
 @Transactional(readOnly = true)
 public class EthereumSignatureService {
@@ -33,7 +36,7 @@ public class EthereumSignatureService {
 			return "0x" + Keys.getAddress(publicKey);
 
 		} catch (Exception e) {
-			throw new RuntimeException("서명으로부터 이더리움 주소를 복원하는데 실패하였습니다.", e);
+			throw new CustomException(ResponseCode.RECOVER_ADDRESS_FAILED);
 		}
 
 	}

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.server.dto.response.AuthResponse;
 import com.example.server.entity.User;
 import com.example.server.entity.enums.Role;
+import com.example.server.exception.CustomException;
+import com.example.server.exception.ResponseCode;
 import com.example.server.jwt.JwtUtil;
 import com.example.server.repository.UserRepository;
 
@@ -30,10 +32,10 @@ public class AuthService {
 	public AuthResponse verifySignature(String message, String signature) {
 
 		String walletAddress = extractWalletAddress(message)
-			.orElseThrow(() -> new RuntimeException("Invalid wallet address"));
+			.orElseThrow(() -> new CustomException(ResponseCode.WALLET_NOT_FOUND));
 
 		String nonce = extractNonce(message)
-			.orElseThrow(() -> new RuntimeException("Invalid nonce"));
+			.orElseThrow(() -> new CustomException(ResponseCode.NONCE_ERR));
 
 		//Redis에 저장된 nonce 가져오기
 		String storedNonce = nonceService.getNonce(walletAddress);

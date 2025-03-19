@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.server.exception.CustomException;
+import com.example.server.exception.ResponseCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class NonceService {
 	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private static final int NONCE_LENGTH = 8;
 	private static final SecureRandom RANDOM = new SecureRandom();
+	private static final Duration NONCE_EXPIRATION = Duration.ofMinutes(10);
 
 	@Transactional
 	public String generateNonce(String walletAddress) {
@@ -33,7 +36,7 @@ public class NonceService {
 			nonce.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
 		}
 		redisTemplate.opsForValue()
-			.set("nonce:" + walletAddress, String.valueOf(nonce), Duration.ofMinutes(10)); // 10분 후 자동 삭제
+			.set("nonce:" + walletAddress, String.valueOf(nonce), NONCE_EXPIRATION); // 10분 후 자동 삭제
 		return nonce.toString();
 	}
 
@@ -54,7 +57,7 @@ public class NonceService {
 				return map.get("walletAddress");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new CustomException(ResponseCode.RECOVER_ADDRESS_FAILED);
 		}
 		return walletAddress;
 	}
