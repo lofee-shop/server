@@ -39,11 +39,14 @@ public class AuthController {
 	private final RefreshtokenService refreshtokenService;
 	private final UserService userService;
 
-	@Operation(summary = "nonce 발급 API", description = "지갑 주소를 받아 nonce를 발급합니다")
+	@Operation(summary = "nonce 발급 API", responses = {
+		@ApiResponse(responseCode = "200", description = "nonce 발급 성공"),
+		@ApiResponse(responseCode = "401", description = "지갑 주소가 유효하지 않음")
+	})
 	@PostMapping("/nonce")
 	public ResponseEntity<NonceResponse> getNonce(@RequestBody String walletAddress) {
 		if (walletAddress == null || walletAddress.isEmpty()) {
-			return ResponseEntity.badRequest().build();
+			throw new CustomException(ResponseCode.WALLET_NOT_FOUND);
 		}
 
 		String nonce = nonceService.generateNonce(walletAddress);
@@ -56,10 +59,10 @@ public class AuthController {
 			@Header(name = HttpHeaders.SET_COOKIE, description = "Refresh Token"),
 			@Header(name = HttpHeaders.AUTHORIZATION, description = "Access Token")
 		}),
-		@ApiResponse(responseCode = "402", description = "서명 검증 실패")
+		@ApiResponse(responseCode = "404", description = "사용자가 유효하지 않음")
 	})
 
-	@PostMapping("verify")
+	@PostMapping("/verify")
 	public ResponseEntity<Boolean> verify(@RequestBody SignatureRequest signatureRequest) {
 		AuthResponse authResponse = authService.verifySignature(signatureRequest.message(),
 			signatureRequest.signature());
@@ -80,14 +83,20 @@ public class AuthController {
 			.body(true);
 	}
 
-	@Operation(summary = "로그아웃 API")
-	@PostMapping("logout")
+	@Operation(summary = "로그아웃 API", responses = {
+		@ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+		@ApiResponse(responseCode = "404", description = "사용자가 유효하지 않음")
+	})
+	@PostMapping("/logout")
 	public void logout(@RequestBody LogoutRequest request) {
 		Long userid = userService.findUserIdbyWalletAddress(request.walletAddress());
 		refreshtokenService.deleteRefreshToken(userid);
 	}
 
-	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급", description = "swagger 상에선 실제로 쿠키 넣어줘야 테스트 가능")
+	@Operation(summary = "accessToken 만료 시 refreshToken으로 재발급", description = "swagger 상에선 실제로 쿠키 넣어줘야 테스트 가능", responses = {
+		@ApiResponse(responseCode = "200", description = "토큰 재발행 성공"),
+		@ApiResponse(responseCode = "404", description = "사용자가 유효하지 않음")
+	})
 	@PostMapping("/refresh")
 	public ResponseEntity<AuthResponse> refreshAccessToken(
 		@CookieValue(value = "refreshToken", required = false) String refreshToken) {
