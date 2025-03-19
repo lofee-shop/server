@@ -17,7 +17,7 @@ public enum ResponseCode {
 	WALLET_NOT_FOUND(401, "지갑 주소가 유효하지 않습니다"),
 
 	//Nonce 유효성 오류
-	NONCE_ERR(401, "Nonce 값이 유효하지 않습니다"),
+	NONCE_ERR(402, "Nonce 값이 유효하지 않습니다"),
 
 	//지갑 주소 복원 실패 오류
 	RECOVER_ADDRESS_FAILED(501, "이더리움 지갑 주소 복원에 실패하였습니다");

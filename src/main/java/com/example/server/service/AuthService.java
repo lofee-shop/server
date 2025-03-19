@@ -42,7 +42,7 @@ public class AuthService {
 		System.out.println(storedNonce);
 		//Redis에 저장된 nonce와 다르면 인증 x
 		if (storedNonce == null || !storedNonce.equals(nonce)) {
-			return new AuthResponse(null, null);
+			throw new CustomException(ResponseCode.NONCE_ERR);
 		}
 
 		//서명 검증 및 지갑 주소 복원
@@ -51,7 +51,7 @@ public class AuthService {
 
 		//복원된 주소와 입력된 주소 비교
 		if (!walletAddress.equalsIgnoreCase(recoveredAddress)) {
-			return new AuthResponse(null, null);
+			throw new CustomException(ResponseCode.WALLET_NOT_FOUND);
 		}
 
 		//nonce 삭제 (일회성 사용)

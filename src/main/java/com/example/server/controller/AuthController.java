@@ -41,7 +41,7 @@ public class AuthController {
 
 	@Operation(summary = "nonce 발급 API", responses = {
 		@ApiResponse(responseCode = "200", description = "nonce 발급 성공"),
-		@ApiResponse(responseCode = "401", description = "지갑 주소가 유효하지 않음")
+		@ApiResponse(responseCode = "402", description = "지갑 주소가 유효하지 않음")
 	})
 	@PostMapping("/nonce")
 	public ResponseEntity<NonceResponse> getNonce(@RequestBody String walletAddress) {
@@ -59,6 +59,8 @@ public class AuthController {
 			@Header(name = HttpHeaders.SET_COOKIE, description = "Refresh Token"),
 			@Header(name = HttpHeaders.AUTHORIZATION, description = "Access Token")
 		}),
+		@ApiResponse(responseCode = "401", description = "Nonce값이 유효하지 않음"),
+		@ApiResponse(responseCode = "402", description = "지갑 주소가 유효하지 않음"),
 		@ApiResponse(responseCode = "404", description = "사용자가 유효하지 않음")
 	})
 
@@ -66,9 +68,6 @@ public class AuthController {
 	public ResponseEntity<Boolean> verify(@RequestBody SignatureRequest signatureRequest) {
 		AuthResponse authResponse = authService.verifySignature(signatureRequest.message(),
 			signatureRequest.signature());
-
-		if (authResponse.accessToken() == null || authResponse.refreshToken() == null)
-			throw new CustomException(ResponseCode.USER_NOT_FOUND);
 
 		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
 			.httpOnly(true)
