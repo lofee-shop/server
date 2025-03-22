@@ -37,7 +37,7 @@ public class ProductSearchService {
 					"user", user.getId(), user.getNickname()))
 				.toList();
 
-		// 상품과 사용자 검색결과를 합쳐서 최대 5개만 추출 (선택적)
+		// 상품과 사용자 검색결과를 합쳐서 최대 5개만 추출
 		List<ProductSearchResponse.Suggestion> suggestions = Stream
 			.concat(productSuggestions.stream(), userSuggestions.stream())
 			.limit(5)

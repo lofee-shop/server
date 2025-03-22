@@ -20,7 +20,7 @@ public class ProductSearchController {
 
 	private final ProductSearchService productSearchService;
 
-	@Operation(summary = "키워드 검색어 조회")
+	@Operation(summary = "키워드를 통한 추천 검색어 조회")
 	@ApiResponse(responseCode = "200", description = "성공적으로 키워드 검색어 목록 조회")
 	@GetMapping("/suggestions")
 	public ResponseEntity<ProductSearchResponse> getSuggestions(@RequestParam("q") String query) {
