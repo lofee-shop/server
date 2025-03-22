@@ -9,7 +9,7 @@ import com.example.server.entity.Cart;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;
 import com.example.server.repository.CartRepository;
-import com.example.server.repository.ProductRepository;
+import com.example.server.repository.ProductSearchRepository;
 import com.example.server.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class CartService {
 
 	private final CartRepository cartRepository;
-	private final ProductRepository productRepository;
+	private final ProductSearchRepository productRepository;
 	private final UserRepository userRepository;
 
 	/**
