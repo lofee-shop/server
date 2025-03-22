@@ -2,6 +2,6 @@ package com.example.server.entity.enums;
 
 public enum Status {
 	ACTIVE,
-	INACTIVE,
+	OUT_OF_STOCK,
 	DELETED
 }
