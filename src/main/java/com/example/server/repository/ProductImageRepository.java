@@ -1,10 +1,10 @@
 package com.example.server.repository;
 
-import com.example.server.entity.ProductThumbnail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.server.entity.ProductImage;
+
 @Repository
-public interface ProductThumbnailRepository extends JpaRepository<ProductThumbnail, Long> {
-    // ...
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
 }
