@@ -12,4 +12,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
 	// 이미 북마크된 상품인지 체크
 	Optional<Bookmark> findByUserAndProduct(User user, Product product);
+
+	boolean existsByProductId(Long productId);
 }
