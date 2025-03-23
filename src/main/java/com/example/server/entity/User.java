@@ -58,9 +58,6 @@ public class User {
 	private Instant createdAt;
 
 	@OneToMany(mappedBy = "user")
-	private List<Product> products = new ArrayList<>();
-
-	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions = new ArrayList<>();
 
 }
