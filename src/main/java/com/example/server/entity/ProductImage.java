@@ -21,7 +21,7 @@ import lombok.Setter;
 public class ProductImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "image_id", nullable = false)
+	@Column(nullable = false)
 	private Long id;
 
 	@NotNull
@@ -31,11 +31,11 @@ public class ProductImage {
 
 	@Size(max = 255)
 	@NotNull
-	@Column(name = "img_url", nullable = false)
+	@Column(nullable = false)
 	private String imgPath;
 
 	@NotNull
-	@Column(name = "is_main", nullable = false)
+	@Column(nullable = false)
 	private Boolean isMain;
 
 }
