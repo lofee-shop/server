@@ -1,14 +1,15 @@
 package com.example.server.entity;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.server.entity.enums.Status;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,6 +33,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "product", schema = "test1")
 public class Product {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
@@ -40,55 +42,44 @@ public class Product {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
-	private User user;
+	private Seller seller;  // 판매자 (FK: seller_id)
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(nullable = false)
+	private SubCategory subCategory;
 
 	@Size(max = 255)
 	@NotNull
 	@Column(nullable = false)
-	private String productName;
+	private String name;
 
 	@NotNull
-	@Column(precision = 10, scale = 2, nullable = false) //(10자리: 8자리 정수 + 2자리 소수점 이하)
-	private BigDecimal price;
+	@Column(nullable = false)
+	private Double price;
 
 	@NotNull
 	@Column(nullable = false)
 	private Integer stock;
 
+	@Lob
+	@Column(nullable = false)
+	private String info;
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Status status;
+	private Status status; // enum: active, out_of_stock, deleted
 
-	@Lob // 장문 설명 대비
-	private String info;
-
-	@ColumnDefault("0")
-	private Integer view;
-
-	/*
+	@CreationTimestamp
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
 
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = Instant.now();
-	}
-	// @PrePersist → 엔티티가 처음 영속화(persist)되기 전에 자동으로 실행.
-	// Instant.now()로 서버 시간(UTC) 기준을 설정.
-	// DB에 의존하지 않고 애플리케이션 레벨에서 일관된 시간 관리.
-	 */
+	@UpdateTimestamp
+	@Column(nullable = false)
+	private Instant updatedAt;
 
-	@ColumnDefault("CURRENT_TIMESTAMP")
-	private Instant createdAt;
-
-	@OneToMany(mappedBy = "product")
-	private List<Bookmark> bookmarks = new ArrayList<>();
-
-	@OneToMany(mappedBy = "product")
-	private List<Cart> carts = new ArrayList<>();
-
-	@OneToMany(mappedBy = "product")
-	private List<ProductThumbnail> productThumbnails = new ArrayList<>();
-
+	// 이미지와 연관관계 수정 (ProductImage 테이블 참조)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProductImage> images = new ArrayList<>();
 }
