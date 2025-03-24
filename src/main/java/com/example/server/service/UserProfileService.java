@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.server.dto.request.UserProfileRequestDto;
 import com.example.server.dto.response.UserProfileResponseDto;
 import com.example.server.entity.User;
+import com.example.server.entity.enums.UploadType;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
 import com.example.server.repository.UserRepository;
@@ -25,8 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserProfileService {
 
 	private final UserRepository userRepository;
-	public static final String PROFILE_UPLOAD_DIR = "/uploads/profile/";
-	private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/profile/";
+	private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/upload/";
 
 	public UserProfileResponseDto getUserProfile(Long userId) {
 		User user = userRepository.findById(userId)
@@ -36,6 +36,7 @@ public class UserProfileService {
 			user.getNickname(),
 			user.getIntroduction(),
 			user.getProfileImg(),
+			user.getBannerImg(),
 			user.getRole()
 		);
 	}
@@ -45,31 +46,42 @@ public class UserProfileService {
 		User user = userRepository.findById(requestDto.userId())
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
-		user.updateProfile(requestDto.nickname(), requestDto.introduction(), requestDto.profileImg());
+		user.updateProfile(
+			requestDto.nickname(),
+			requestDto.introduction(),
+			requestDto.profileImg(),
+			requestDto.bannerImg()
+		);
+
 		return new UserProfileResponseDto(
 			user.getId(),
 			user.getNickname(),
 			user.getIntroduction(),
 			user.getProfileImg(),
+			user.getBannerImg(),
 			user.getRole()
 		);
 	}
 
 	@Transactional
-	public String uploadProfileImage(MultipartFile file) throws IOException {
+	public String uploadProfileImage(MultipartFile file, String type) throws IOException {
 		if (file.isEmpty()) {
 			throw new CustomException(ResponseCode.FILE_UPLOAD_FAILED);
 		}
 
-		String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-		Path path = Paths.get(UPLOAD_DIR + fileName);
+		UploadType uploadType = UploadType.getType(type);
 
-		File directory = new File(UPLOAD_DIR);
+		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+		String fullUploadDir = UPLOAD_DIR + uploadType.getSubDirectory();
+
+		File directory = new File(fullUploadDir);
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
 
-		file.transferTo(path.toFile());
-		return PROFILE_UPLOAD_DIR + fileName;
+		Path filePath = Paths.get(fullUploadDir + fileName);
+		file.transferTo(filePath.toFile());
+
+		return uploadType.getReturnPath() + fileName;
 	}
 }

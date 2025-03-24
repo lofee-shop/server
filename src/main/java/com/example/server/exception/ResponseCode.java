@@ -11,7 +11,10 @@ public enum ResponseCode {
 	ADDRESS_NOT_FOUND(404, "배송지를 찾을 수 없습니다."),
 
 	// 파일 업로드 오류
-	FILE_UPLOAD_FAILED(400, "파일 업로드에 실패하였습니다.");
+	FILE_UPLOAD_FAILED(400, "파일 업로드에 실패하였습니다."),
+
+	// 이미지 타입 오류
+	INVALID_IMAGE_TYPE(400, "잘못된 이미지 타입입니다.");
 
 	private final int status;
 	private final String message;

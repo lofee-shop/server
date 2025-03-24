@@ -45,6 +45,8 @@ public class User {
 
 	private String profileImg;
 
+	private String bannerImg;
+
 	@Size(max = 100)
 	@Column(length = 100)
 	private String introduction;
@@ -71,10 +73,10 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses = new ArrayList<>();
 
-	public void updateProfile(String nickname, String introduction, String profileImg) {
+	public void updateProfile(String nickname, String introduction, String profileImg, String bannerImg) {
 		this.nickname = nickname;
 		this.introduction = introduction;
 		this.profileImg = profileImg;
+		this.bannerImg = bannerImg;
 	}
-
 }

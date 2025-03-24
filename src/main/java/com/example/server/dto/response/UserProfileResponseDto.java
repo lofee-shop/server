@@ -7,6 +7,7 @@ public record UserProfileResponseDto(
 	String nickname,
 	String introduction,
 	String profileImg,
+	String bannerImg,
 	Role role
 ) {
 }

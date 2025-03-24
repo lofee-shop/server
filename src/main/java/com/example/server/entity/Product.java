@@ -71,8 +71,4 @@ public class Product {
 
 	@OneToMany(mappedBy = "product")
 	private List<Cart> carts = new ArrayList<>();
-
-	@OneToMany(mappedBy = "product")
-	private List<ProductThumbnail> productThumbnails = new ArrayList<>();
-
 }

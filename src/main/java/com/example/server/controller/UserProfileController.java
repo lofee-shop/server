@@ -60,11 +60,26 @@ public class UserProfileController {
 		@ApiResponse(responseCode = "201", description = "이미지 업로드 성공",
 			content = @Content(schema = @Schema(implementation = String.class))),
 		@ApiResponse(responseCode = "400", description = "파일 업로드 실패"),
+		@ApiResponse(responseCode = "400", description = "이미지 타입 오류"),
+		@ApiResponse(responseCode = "500", description = "서버 오류"),
+	})
+	@PostMapping("/upload-profile-image")
+	public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file) throws IOException {
+		String filePath = userProfileService.uploadProfileImage(file, "profile");
+		return ResponseEntity.status(201).body(filePath);
+	}
+
+	@Operation(summary = "배너 이미지 업로드", description = "사용자의 배너 이미지를 업로드합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "이미지 업로드 성공",
+			content = @Content(schema = @Schema(implementation = String.class))),
+		@ApiResponse(responseCode = "400", description = "파일 업로드 실패"),
+		@ApiResponse(responseCode = "400", description = "이미지 타입 오류"),
 		@ApiResponse(responseCode = "500", description = "서버 오류")
 	})
-	@PostMapping("/upload-image")
-	public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file) throws IOException {
-		String filePath = userProfileService.uploadProfileImage(file);
+	@PostMapping("/upload-banner-image")
+	public ResponseEntity<String> uploadBannerImage(@RequestParam("file") MultipartFile file) throws IOException {
+		String filePath = userProfileService.uploadProfileImage(file, "banner");
 		return ResponseEntity.status(201).body(filePath);
 	}
 }

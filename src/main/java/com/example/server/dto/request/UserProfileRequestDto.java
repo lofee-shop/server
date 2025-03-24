@@ -4,6 +4,7 @@ public record UserProfileRequestDto(
 	Long userId,
 	String nickname,
 	String introduction,
-	String profileImg
+	String profileImg,
+	String bannerImg
 ) {
 }
