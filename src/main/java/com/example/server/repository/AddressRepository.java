@@ -10,4 +10,10 @@ import com.example.server.entity.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 	List<Address> findByUserId(Long userId);
+
+	List<Address> findByUserIdOrderByIsDefaultDescUpdatedAtDesc(Long userId);
+
+	boolean existsByUserIdAndIsDefaultTrue(Long userId);
+
+	List<Address> findByUserIdOrderByUpdatedAtDesc(Long userId);
 }

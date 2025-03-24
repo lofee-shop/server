@@ -6,6 +6,9 @@ public record AddressResponseDto(
 	String phoneNumber,
 	String address,
 	String postalCode,
+	String addressDetail,
+	String deliveryRequest,
+	boolean isDefault,
 	Long userId
 ) {
 }

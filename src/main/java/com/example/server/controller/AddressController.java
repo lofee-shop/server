@@ -28,16 +28,18 @@ public class AddressController {
 
 	private final AddressService addressService;
 
-	@Operation(summary = "주소 추가", description = "사용자가 새로운 주소를 추가합니다.")
+	@Operation(summary = "주소 추가/수정", description = "사용자가 새로운 주소를 추가/수정합니다.")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "201", description = "주소 추가 성공"),
+		@ApiResponse(responseCode = "201", description = "주소 추가/수정 성공"),
+		@ApiResponse(responseCode = "400", description = "배송지는 최대 5개까지만 등록할 수 있습니다."),
+		@ApiResponse(responseCode = "404", description = "배송지를 찾을 수 없습니다."),
 		@ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.")
 	})
 	@PostMapping("/{userId}")
 	public ResponseEntity<Void> addAddress(
 		@PathVariable Long userId,
 		@Valid @RequestBody AddressRequestDto requestDto) {
-		addressService.addAddress(userId, requestDto);
+		addressService.updateAddress(userId, requestDto);
 		return ResponseEntity.status(201).build();
 	}
 
@@ -57,9 +59,9 @@ public class AddressController {
 		@ApiResponse(responseCode = "201", description = "삭제 완료"),
 		@ApiResponse(responseCode = "404", description = "배송지를 찾을 수 없습니다.")
 	})
-	@DeleteMapping("/{addressId}")
-	public ResponseEntity<Void> deleteAddress(@PathVariable Long addressId) {
-		addressService.deleteAddress(addressId);
+	@DeleteMapping("/{userId}/{addressId}")
+	public ResponseEntity<Void> deleteAddress(@PathVariable Long userId, @PathVariable Long addressId) {
+		addressService.deleteAddress(userId, addressId);
 		return ResponseEntity.status(201).build();
 	}
 }
