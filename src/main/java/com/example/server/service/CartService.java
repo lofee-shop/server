@@ -1,13 +1,13 @@
 package com.example.server.service;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.server.entity.Cart;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;
+import com.example.server.exception.CustomException;
+import com.example.server.exception.ResponseCode;
 import com.example.server.repository.CartRepository;
 import com.example.server.repository.ProductSearchRepository;
 import com.example.server.repository.UserRepository;
@@ -28,10 +28,9 @@ public class CartService {
 	 */
 	public boolean hasCartItem(Long userId, Long productId) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NoSuchElementException("User not found"));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		Product product = productRepository.findById(productId)
-			.orElseThrow(() -> new NoSuchElementException("Product not found"));
-
+			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
 		return cartRepository.findByUserAndProduct(user, product).isPresent();
 	}
 
@@ -41,12 +40,11 @@ public class CartService {
 	@Transactional
 	public void updateCartItemQuantity(Long userId, Long productId, int quantityToAdd) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NoSuchElementException("User not found"));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		Product product = productRepository.findById(productId)
-			.orElseThrow(() -> new NoSuchElementException("Product not found"));
-
+			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
 		Cart cart = cartRepository.findByUserAndProduct(user, product)
-			.orElseThrow(() -> new NoSuchElementException("Cart item not found"));
+			.orElseThrow(() -> new CustomException(ResponseCode.CART_ITEM_NOT_FOUND));
 
 		// 수량 누적
 		cart.setQuantity(cart.getQuantity() + quantityToAdd);
@@ -59,9 +57,9 @@ public class CartService {
 	@Transactional
 	public void createCartItem(Long userId, Long productId, int quantity) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NoSuchElementException("User not found"));
+			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		Product product = productRepository.findById(productId)
-			.orElseThrow(() -> new NoSuchElementException("Product not found"));
+			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
 
 		Cart newCart = new Cart();
 		newCart.setUser(user);
