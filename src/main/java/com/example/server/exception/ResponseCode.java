@@ -9,8 +9,6 @@ public enum ResponseCode {
 
 	// 상품 (장바구니) 관련 오류
 	PRODUCT_NOT_FOUND(404, "상품을 찾을 수 없습니다."),
-	INVALID_REQUEST(400, "요청이 올바르지 않습니다."),
-	FORBIDDEN(403, "로그인이 필요합니다."),
 	STOCK_NOT_ENOUGH(409, "재고가 부족합니다."),
 
 	// 상품 (북마크) 관련 오류
