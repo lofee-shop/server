@@ -43,7 +43,7 @@ public class BookmarkController {
 
 	private void validateRequest(BookmarkRequest request) {
 		if (request.userId() == null) {
-			throw new CustomException(ResponseCode.FORBIDDEN);
+			throw new CustomException(ResponseCode.USER_NOT_FOUND);
 		}
 
 		if (request.productId() == null) {
