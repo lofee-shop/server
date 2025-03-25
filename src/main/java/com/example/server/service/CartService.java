@@ -4,11 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.server.entity.Cart;
+import com.example.server.entity.CartItem;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
-import com.example.server.repository.CartRepository;
+import com.example.server.repository.CartItemRepository;
 import com.example.server.repository.ProductSearchRepository;
 import com.example.server.repository.UserRepository;
 
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class CartService {
 
-	private final CartRepository cartRepository;
+	private final CartItemRepository cartItemRepository;
 	private final ProductSearchRepository productRepository;
 	private final UserRepository userRepository;
 
@@ -31,7 +32,7 @@ public class CartService {
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
-		return cartRepository.findByUserAndProduct(user, product).isPresent();
+		return cartItemRepository.findByCartUserAndProduct(user, product).isPresent();
 	}
 
 	/**
@@ -43,12 +44,12 @@ public class CartService {
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
-		Cart cart = cartRepository.findByUserAndProduct(user, product)
+		CartItem cartItem = cartItemRepository.findByCartUserAndProduct(user, product)
 			.orElseThrow(() -> new CustomException(ResponseCode.CART_ITEM_NOT_FOUND));
 
-		// 수량 누적
-		cart.setQuantity(cart.getQuantity() + quantityToAdd);
-		cartRepository.save(cart);
+		// 기존 수량 + 추가 수량
+		cartItem.setQuantity(cartItem.getQuantity() + quantityToAdd);
+		cartItemRepository.save(cartItem);
 	}
 
 	/**
@@ -61,11 +62,17 @@ public class CartService {
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));
 
-		Cart newCart = new Cart();
-		newCart.setUser(user);
-		newCart.setProduct(product);
-		newCart.setQuantity(quantity);
-		// createdAt은 @PrePersist
-		cartRepository.save(newCart);
+		Cart cart = user.getCart();
+		if (cart == null) {
+			// 만약 Cart가 없으면 새로 생성 (한 유저=한 카트라는 전제)
+			cart = new Cart();
+			cart.setUser(user);
+
+			CartItem newCartItem = new CartItem();
+			newCartItem.setCart(cart);        // 이 cart는 이미 user와 1:1인 장바구니 컨테이너
+			newCartItem.setProduct(product);
+			newCartItem.setQuantity(quantity);
+			cartItemRepository.save(newCartItem);
+		}
 	}
 }
