@@ -10,6 +10,7 @@ public enum ResponseCode {
 	// 상품 (장바구니) 관련 오류
 	PRODUCT_NOT_FOUND(404, "상품을 찾을 수 없습니다."),
 	STOCK_NOT_ENOUGH(409, "재고가 부족합니다."),
+	CART_ITEM_NOT_FOUND(404, "장바구니 항목을 찾을 수 없습니다."),
 
 	// 상품 (북마크) 관련 오류
 	ALREADY_BOOKMARKED(409, "이미 북마크한 상품입니다."),
