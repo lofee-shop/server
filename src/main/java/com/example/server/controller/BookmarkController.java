@@ -47,7 +47,7 @@ public class BookmarkController {
 		}
 
 		if (request.productId() == null) {
-			throw new CustomException(ResponseCode.INVALID_REQUEST);
+			throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
 		}
 	}
 }
