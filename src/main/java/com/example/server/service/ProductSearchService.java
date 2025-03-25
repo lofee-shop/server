@@ -15,12 +15,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductSearchService {
 
 	private final ProductSearchRepository productSearchRepository;
 	private final UserRepository userRepository;
-
-	@Transactional(readOnly = true)
+	
 	public ProductSearchResponse getSuggestions(String query) {
 
 		List<ProductSearchResponse.Suggestion> productSuggestions =

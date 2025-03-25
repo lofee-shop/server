@@ -18,12 +18,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
 	private final ProductRepository productRepository;
 	private final BookmarkRepository bookmarkRepository;
-
-	@Transactional(readOnly = true)
+	
 	public ProductDetailResponse getProductDetail(Long productId) {
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));

@@ -18,13 +18,14 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class BookmarkService {
 
 	private final BookmarkRepository bookmarkRepository;
 	private final UserRepository userRepository;
 	private final ProductRepository productRepository;
 
+	@Transactional
 	public BookmarkResponse addBookmark(BookmarkRequest request) {
 		User user = userRepository.findById(request.userId())
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
