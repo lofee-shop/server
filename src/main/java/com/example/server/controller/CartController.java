@@ -65,11 +65,11 @@ public class CartController {
 
 	private void validateRequest(CartRequest request) {
 		if (request.userId() == null) {
-			throw new CustomException(ResponseCode.FORBIDDEN);
+			throw new CustomException(ResponseCode.USER_NOT_FOUND);
 		}
 
 		if (request.productId() == null || request.quantity() <= 0) {
-			throw new CustomException(ResponseCode.INVALID_REQUEST);
+			throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
 		}
 
 		if (request.quantity() > 10) { // 실제 서비스에선 실제 재고량 확인이 필요
