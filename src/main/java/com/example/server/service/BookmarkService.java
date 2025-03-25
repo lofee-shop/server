@@ -43,6 +43,6 @@ public class BookmarkService {
 		bookmark.setProduct(product);
 		bookmarkRepository.save(bookmark);
 
-		return new BookmarkResponse("Bookmark added", true);
+		return new BookmarkResponse(true);
 	}
 }

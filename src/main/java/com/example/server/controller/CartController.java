@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.server.dto.CartItem;
 import com.example.server.dto.request.CartRequest;
 import com.example.server.dto.response.CartResponse;
 import com.example.server.exception.CustomException;
@@ -46,20 +45,10 @@ public class CartController {
 
 		if (alreadyInCart) {
 			cartService.updateCartItemQuantity(request.userId(), request.productId(), request.quantity());
-
-			CartResponse response = new CartResponse(
-				"Cart updated successfully",
-				new CartItem(request.productId(), request.quantity())
-			);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok().build();
 		} else {
 			cartService.createCartItem(request.userId(), request.productId(), request.quantity());
-
-			CartResponse response = new CartResponse(
-				"Product added to cart",
-				new CartItem(request.productId(), request.quantity())
-			);
-			return ResponseEntity.status(HttpStatus.CREATED).body(response);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
 	}
 
