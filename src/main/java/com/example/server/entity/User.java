@@ -21,12 +21,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users", schema = "test1")
 public class User {
 	@Id
@@ -62,10 +66,8 @@ public class User {
 	private Boolean isActive = false;
 
 	@ColumnDefault("CURRENT_TIMESTAMP")
+	@Column(name = "created_at")
 	private Instant createdAt;
-
-	@OneToMany(mappedBy = "user")
-	private List<Product> products = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions = new ArrayList<>();
@@ -78,5 +80,10 @@ public class User {
 		this.introduction = introduction;
 		this.profileImg = profileImg;
 		this.bannerImg = bannerImg;
+	}
+	public User(String walletAddress, Role role, Boolean isActive) {
+		this.walletAddress = walletAddress;
+		this.role = role;
+		this.isActive = isActive;
 	}
 }
