@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -35,25 +36,26 @@ public class Transaction {
 
 	@Size(max = 66)
 	@NotNull
-	@Column(name = "tx_hash", nullable = false, length = 66)
+	@Column(nullable = false, length = 66)
 	private String txHash;
 
 	@Size(max = 50)
 	@NotNull
-	@Column(name = "network", nullable = false, length = 50)
+	@Column(nullable = false, length = 50)
 	private String network;
 
 	@NotNull
-	@Column(name = "status", nullable = false)
+	@Lob
+	@Column(nullable = false)
 	private String status;
 
 	@NotNull
-	@Column(name = "total_amount", nullable = false)
+	@Column(nullable = false)
 	private Float totalAmount;
 
 	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at", nullable = false)
+	@Column(nullable = false)
 	private Instant createdAt;
 
 }

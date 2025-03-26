@@ -16,17 +16,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users", schema = "test1")
 public class User {
 	@Id
@@ -36,21 +40,29 @@ public class User {
 
 	@Size(max = 42)
 	@NotNull
-	@Column(name = "wallet_address", nullable = false, length = 42)
+	@Column(nullable = false, length = 42)
 	private String walletAddress;
 
 	@Size(max = 50)
-	@NotNull
-	@Column(name = "nickname", nullable = false, length = 50)
+	@Column(length = 50)
 	private String nickname;
 
+	private String profileImg;
+
+	private String bannerImg;
+
+	@Size(max = 100)
+	@Column(length = 100)
+	private String introduction;
+
 	@NotNull
+	@Lob
 	@Enumerated(EnumType.STRING)
-	@Column(name = "role", nullable = false)
+	@Column(nullable = false)
 	private Role role;
 
 	@NotNull
-	@Column(name = "is_active", nullable = false)
+	@Column(nullable = false)
 	private Boolean isActive = false;
 
 	@ColumnDefault("CURRENT_TIMESTAMP")
@@ -60,7 +72,18 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions = new ArrayList<>();
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Cart cart;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Address> addresses = new ArrayList<>();
 
+	public void updateProfile(String nickname, String introduction, String profileImg, String bannerImg) {
+		this.nickname = nickname;
+		this.introduction = introduction;
+		this.profileImg = profileImg;
+		this.bannerImg = bannerImg;
+	}
+	public User(String walletAddress, Role role, Boolean isActive) {
+		this.walletAddress = walletAddress;
+		this.role = role;
+		this.isActive = isActive;
+	}
 }

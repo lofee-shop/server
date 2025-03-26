@@ -1,12 +1,14 @@
 package com.example.server.repository;
 
-import java.util.List;
+
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.server.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+	Optional<User> findByWalletAddress(String walletAddress);
 
-	List<User> findTop5ByNicknameContainingIgnoreCase(String nickname);
+	Optional<User> findById(Long userid);
 }
