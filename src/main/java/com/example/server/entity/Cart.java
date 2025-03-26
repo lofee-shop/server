@@ -1,13 +1,24 @@
 package com.example.server.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -15,21 +26,18 @@ import java.time.Instant;
 @Table(name = "cart", schema = "test1")
 public class Cart {
 	@Id
-	@Column(name = "cart_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false)
 	private Long id;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Product product;
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(nullable = false)
+	private User user;
 
-	@NotNull
-	@ColumnDefault("1")
-	@Column(nullable = false)
-	private Integer quantity;
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<CartItem> items = new ArrayList<>();
 
-	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
-
 }

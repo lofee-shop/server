@@ -1,8 +1,7 @@
 package com.example.server.entity;
 
-import java.time.Instant;
-
-import org.hibernate.annotations.ColumnDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,34 +11,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "bookmark", schema = "test1")
-public class Bookmark {
+@Table(name = "subcategory", schema = "test1")
+public class SubCategory {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
 	private Long id;
 
-	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
-	private Product product;
+	private Category category; // 대분류 카테고리
 
-	//  누가 북마크했는지
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(nullable = false)
-	private User user;
+	@Column(nullable = false)
+	private String subcategoryName;
 
-	@NotNull
-	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(nullable = false, updatable = false)
-	private Instant createdAt;
+	@OneToMany(mappedBy = "subCategory")
+	private List<Product> products = new ArrayList<>();
 }

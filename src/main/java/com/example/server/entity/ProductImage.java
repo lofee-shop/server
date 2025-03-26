@@ -1,9 +1,5 @@
 package com.example.server.entity;
 
-import java.time.Instant;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,14 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "bookmark", schema = "test1")
-public class Bookmark {
+@Table(name = "product_Image", schema = "test1")
+public class ProductImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
@@ -29,17 +26,16 @@ public class Bookmark {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
-	//  누가 북마크했는지
+	@Size(max = 255)
 	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(nullable = false)
-	private User user;
+	@Column(nullable = false)
+	private String imgPath;
 
 	@NotNull
-	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(nullable = false, updatable = false)
-	private Instant createdAt;
+	@Column(nullable = false)
+	private Boolean isMain;
+
 }

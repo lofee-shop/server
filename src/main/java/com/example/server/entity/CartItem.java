@@ -20,8 +20,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "bookmark", schema = "test1")
-public class Bookmark {
+@Table(name = "cart_item", schema = "test1")
+public class CartItem {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
@@ -30,15 +31,17 @@ public class Bookmark {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
-	private Product product;
+	private Cart cart;
 
-	//  누가 북마크했는지
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
-	private User user;
+	private Product product;
 
 	@NotNull
+	@Column(nullable = false)
+	private Integer quantity = 1;
+
 	@ColumnDefault("CURRENT_TIMESTAMP")
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
