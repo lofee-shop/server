@@ -6,8 +6,13 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.example.server.entity.enums.Role;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,25 +36,32 @@ public class User {
 
 	@Size(max = 42)
 	@NotNull
-	@Column(name = "wallet_address", nullable = false, length = 42)
+	@Column(nullable = false, length = 42)
 	private String walletAddress;
 
 	@Size(max = 50)
-	@NotNull
-	@Column(name = "nickname", nullable = false, length = 50)
+	@Column(length = 50)
 	private String nickname;
+
+	private String profileImg;
+
+	private String bannerImg;
+
+	@Size(max = 100)
+	@Column(length = 100)
+	private String introduction;
 
 	@NotNull
 	@Lob
-	@Column(name = "role", nullable = false)
-	private String role;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role;
 
 	@NotNull
-	@Column(name = "is_active", nullable = false)
+	@Column(nullable = false)
 	private Boolean isActive = false;
 
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at")
 	private Instant createdAt;
 
 	@OneToMany(mappedBy = "user")
@@ -58,4 +70,13 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Transaction> transactions = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Address> addresses = new ArrayList<>();
+
+	public void updateProfile(String nickname, String introduction, String profileImg, String bannerImg) {
+		this.nickname = nickname;
+		this.introduction = introduction;
+		this.profileImg = profileImg;
+		this.bannerImg = bannerImg;
+	}
 }

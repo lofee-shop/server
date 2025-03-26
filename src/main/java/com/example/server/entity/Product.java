@@ -39,33 +39,31 @@ public class Product {
 
 	@Size(max = 255)
 	@NotNull
-	@Column(name = "product_name", nullable = false)
+	@Column(nullable = false)
 	private String productName;
 
 	@NotNull
-	@Column(name = "price", nullable = false)
+	@Column(nullable = false)
 	private Float price;
 
 	@NotNull
-	@Column(name = "stock", nullable = false)
+	@Column(nullable = false)
 	private Integer stock;
 
 	@NotNull
 	@Lob
-	@Column(name = "status", nullable = false)
+	@Column(nullable = false)
 	private String status;
 
 	@Size(max = 255)
-	@Column(name = "info")
 	private String info;
 
 	@ColumnDefault("0")
-	@Column(name = "view")
 	private Integer view;
 
 	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at", nullable = false)
+	@Column(nullable = false)
 	private Instant createdAt;
 
 	@OneToMany(mappedBy = "product")
@@ -73,8 +71,4 @@ public class Product {
 
 	@OneToMany(mappedBy = "product")
 	private List<Cart> carts = new ArrayList<>();
-
-	@OneToMany(mappedBy = "product")
-	private List<ProductThumbnail> productThumbnails = new ArrayList<>();
-
 }
