@@ -79,6 +79,9 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Cart cart;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Bookmark> bookmarks = new ArrayList<>();
+
 	public void updateProfile(String nickname, String introduction, String profileImg, String bannerImg) {
 		this.nickname = nickname;
 		this.introduction = introduction;
