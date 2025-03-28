@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/cart")
 public class CartController {
 
 	private final CartService cartService;
@@ -36,7 +36,7 @@ public class CartController {
 		@ApiResponse(responseCode = "403", description = "로그인하지 않은 사용자."),
 		@ApiResponse(responseCode = "409", description = "재고 부족.")
 	})
-	@PostMapping("/cart")
+	@PostMapping("/")
 	public ResponseEntity<CartResponse> addToCart(@RequestBody CartRequest request) {
 
 		validateRequest(request);

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/bookmarks")
 public class BookmarkController {
 
 	private final BookmarkService bookmarkService;
@@ -33,7 +33,7 @@ public class BookmarkController {
 		@ApiResponse(responseCode = "404", description = "존재하지 않는 상품 또는 사용자"),
 		@ApiResponse(responseCode = "409", description = "이미 북마크한 상품")
 	})
-	@PostMapping("/bookmarks")
+	@PostMapping("/")
 	public ResponseEntity<BookmarkResponse> addBookmark(@RequestBody BookmarkRequest request) {
 		validateRequest(request);
 
