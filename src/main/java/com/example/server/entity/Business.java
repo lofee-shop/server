@@ -1,15 +1,12 @@
 package com.example.server.entity;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.server.entity.enums.VerificationStatus;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,53 +16,58 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "seller", schema = "test1")
-public class Seller {
-
+@Table(name = "business", schema = "test1")
+public class Business {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "seller_id", nullable = false)
+	@Column(name = "business_id", nullable = false)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(nullable = false)
-	private User user;  // FK (Users)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "seller_id")
+	private Seller seller;
 
+	@Size(max = 255)
+	@NotNull
 	@Column(nullable = false)
-	private String name;  // 실제 판매자 이름
+	private String businessNumber;
 
+	@Size(max = 255)
+	@NotNull
 	@Column(nullable = false)
-	private String phone;  // 판매자 연락처
+	private String businessName;
 
+	@Size(max = 255)
+	@NotNull
+	@Column(nullable = false)
+	private String businessAddress;
+
+	@Size(max = 255)
+	@NotNull
+	@Column(nullable = false)
+	private String name;
+
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private VerificationStatus verificationStatus;  // pending, verified, rejected
+	private VerificationStatus verificationStatus;
 
+	@NotNull
 	@Column(nullable = false)
-	private Integer baseShippingFee;  // 기본 배송비
-
-	@Column(nullable = false)
-	private Integer freeShippingThreshold;  // 무료배송 기준
-
-	@Column(nullable = false)
-	private Boolean isBusiness;  // true: 사업자, false: 개인 판매자
-
 	@CreationTimestamp
-	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
 
 	@UpdateTimestamp
 	private Instant verifiedAt;
 
-	@OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Product> products = new ArrayList<>();
 }

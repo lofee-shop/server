@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.server.entity.enums.Role;
 
@@ -16,9 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -48,39 +46,36 @@ public class User {
 	@Column(length = 50)
 	private String nickname;
 
-	private String profileImg;
-
-	private String bannerImg;
-
 	@Size(max = 100)
 	@Column(length = 100)
 	private String introduction;
 
+	private String profileImg;
+
+	private String bannerImg;
+
 	@NotNull
-	@Lob
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
 
-	@NotNull
-	@Column(nullable = false)
-	private Boolean isActive = false;
-
-	@ColumnDefault("CURRENT_TIMESTAMP")
-	@Column(name = "created_at")
+	@CreationTimestamp
 	private Instant createdAt;
-
-	@OneToMany(mappedBy = "user")
-	private List<Transaction> transactions = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses = new ArrayList<>();
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Cart cart;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CartItem> cartItems = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Bookmark> bookmarks = new ArrayList<>();
+	private List<Watchlist> bookmarks = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Order> orders = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Review> reviews = new ArrayList<>();
 
 	public void updateProfile(String nickname, String introduction, String profileImg, String bannerImg) {
 		this.nickname = nickname;
@@ -88,9 +83,10 @@ public class User {
 		this.profileImg = profileImg;
 		this.bannerImg = bannerImg;
 	}
-	public User(String walletAddress, Role role, Boolean isActive) {
+
+	public User(String walletAddress, String nickname, Role role) {
 		this.walletAddress = walletAddress;
+		this.nickname = nickname;
 		this.role = role;
-		this.isActive = isActive;
 	}
 }

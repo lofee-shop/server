@@ -30,28 +30,28 @@ public class Address {
 	@Column(name = "address_id", nullable = false)
 	private Long id;
 
-	@Column(name = "recipient_name", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+
+	@Column(name = "name", nullable = false)
 	private String realName;
 
-	@Column(name = "recipient_phone", nullable = false)
+	@Column(name = "phone", nullable = false)
 	private String phoneNumber;
-
-	@Column(name = "road_addr", nullable = false)
-	private String address;
 
 	@Column(name = "zip_no", nullable = false)
 	private String postalCode;
+
+	@Column(name = "road_addr", nullable = false)
+	private String address;
 
 	private String addressDetail;
 
 	private String deliveryRequest;
 
-	@Column(name = "is_default", nullable = false)
+	@Column(nullable = false)
 	private boolean isDefault;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
 
 	@CreationTimestamp
 	@Column(updatable = false)
@@ -59,7 +59,7 @@ public class Address {
 
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
-
+	
 	public void setDefault(boolean aDefault) {
 		isDefault = aDefault;
 	}

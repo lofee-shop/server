@@ -1,5 +1,7 @@
 package com.example.server.entity;
 
+import com.example.server.entity.enums.ImgType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,11 +19,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "product_Image", schema = "test1")
+@Table(name = "product_image", schema = "test1")
 public class ProductImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
+	@Column(name = "product_img_id", nullable = false)
 	private Long id;
 
 	@NotNull
@@ -31,11 +33,11 @@ public class ProductImage {
 
 	@Size(max = 255)
 	@NotNull
-	@Column(nullable = false)
+	@Column(name = "image_url", nullable = false)
 	private String imgPath;
 
 	@NotNull
 	@Column(nullable = false)
-	private Boolean isMain;
+	private ImgType type;
 
 }

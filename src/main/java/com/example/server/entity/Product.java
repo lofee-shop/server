@@ -7,19 +7,14 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.example.server.entity.enums.Status;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -36,7 +31,7 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
+	@Column(name = "product_id", nullable = false)
 	private Long id;
 
 	@NotNull
@@ -62,14 +57,12 @@ public class Product {
 	@Column(nullable = false)
 	private Integer stock;
 
-	@Lob
-	@Column(nullable = false)
+	@Column(name = "description", nullable = false)
 	private String info;
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Status status; // enum: active, out_of_stock, deleted
+	private Integer viewCount;
+
+	private Integer watchlistCount;
 
 	@CreationTimestamp
 	@Column(nullable = false, updatable = false)
@@ -78,6 +71,12 @@ public class Product {
 	@UpdateTimestamp
 	@Column(nullable = false)
 	private Instant updatedAt;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CartItem> cartItems = new ArrayList<>();
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Watchlist> watchlists = new ArrayList<>();
 
 	// 이미지와 연관관계 수정 (ProductImage 테이블 참조)
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

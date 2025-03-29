@@ -24,14 +24,14 @@ public class SubCategory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
+	@Column(name = "subcategory_id", nullable = false)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(nullable = false)
 	private Category category; // 대분류 카테고리
 
-	@Column(nullable = false)
+	@Column(name = "name", nullable = false)
 	private String subcategoryName;
 
 	@OneToMany(mappedBy = "subCategory")
