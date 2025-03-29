@@ -9,5 +9,5 @@ import com.example.server.entity.Product;
 import com.example.server.entity.User;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-	Optional<CartItem> findByCartUserAndProduct(User user, Product product);
+	Optional<CartItem> findByUserAndProduct(User user, Product product);
 }

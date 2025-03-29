@@ -11,7 +11,7 @@ import com.example.server.dto.request.BookmarkRequest;
 import com.example.server.dto.response.BookmarkResponse;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
-import com.example.server.service.BookmarkService;
+import com.example.server.service.WatchlistService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/bookmarks")
 public class BookmarkController {
 
-	private final BookmarkService bookmarkService;
+	private final WatchlistService bookmarkService;
 
 	@Operation(summary = "상품 북마크")
 	@ApiResponses({

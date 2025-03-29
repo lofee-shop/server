@@ -1,14 +1,9 @@
 package com.example.server.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.server.dto.request.CartRequest;
-import com.example.server.dto.response.CartResponse;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
 import com.example.server.service.CartService;
@@ -36,7 +31,7 @@ public class CartController {
 		@ApiResponse(responseCode = "403", description = "로그인하지 않은 사용자."),
 		@ApiResponse(responseCode = "409", description = "재고 부족.")
 	})
-	@PostMapping("/")
+	/*@PostMapping("/")
 	public ResponseEntity<CartResponse> addToCart(@RequestBody CartRequest request) {
 
 		validateRequest(request);
@@ -50,7 +45,7 @@ public class CartController {
 			cartService.createCartItem(request.userId(), request.productId(), request.quantity());
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}
-	}
+	}*/
 
 	private void validateRequest(CartRequest request) {
 		if (request.userId() == null) {

@@ -60,8 +60,7 @@ public class AuthService {
 		//사용자 확인
 		User user = userRepository.findByWalletAddress(walletAddress)
 			.orElseGet(() -> { //DB에 없으면 자동 회원가입
-				User newUser = new User(walletAddress, Role.BUYER, true);
-				newUser.setNickname("buyer" + new Random().nextInt(900000) + 100000);
+				User newUser = new User(walletAddress, "buyer" + new Random().nextInt(900000) + 100000, Role.BUYER);
 				return userRepository.save(newUser);
 			});
 
