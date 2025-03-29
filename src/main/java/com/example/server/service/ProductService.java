@@ -11,8 +11,8 @@ import com.example.server.entity.Product;
 import com.example.server.entity.ProductImage;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
-import com.example.server.repository.BookmarkRepository;
 import com.example.server.repository.ProductRepository;
+import com.example.server.repository.WatchlistRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
 	private final ProductRepository productRepository;
-	private final BookmarkRepository bookmarkRepository;
-	
+	private final WatchlistRepository bookmarkRepository;
+
 	public ProductDetailResponse getProductDetail(Long productId) {
 		Product product = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ResponseCode.PRODUCT_NOT_FOUND));

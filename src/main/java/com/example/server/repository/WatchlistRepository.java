@@ -4,14 +4,14 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.server.entity.Bookmark;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;
+import com.example.server.entity.Watchlist;
 
-public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+public interface WatchlistRepository extends JpaRepository<Watchlist, Long> {
 
 	// 이미 북마크된 상품인지 체크
-	Optional<Bookmark> findByUserAndProduct(User user, Product product);
+	Optional<Watchlist> findByUserAndProduct(User user, Product product);
 
 	boolean existsByProductId(Long productId);
 }

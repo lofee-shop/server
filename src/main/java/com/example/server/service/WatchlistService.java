@@ -5,23 +5,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.server.dto.request.BookmarkRequest;
 import com.example.server.dto.response.BookmarkResponse;
-import com.example.server.entity.Bookmark;
 import com.example.server.entity.Product;
 import com.example.server.entity.User;
+import com.example.server.entity.Watchlist;
 import com.example.server.exception.CustomException;
 import com.example.server.exception.ResponseCode;
-import com.example.server.repository.BookmarkRepository;
 import com.example.server.repository.ProductRepository;
 import com.example.server.repository.UserRepository;
+import com.example.server.repository.WatchlistRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BookmarkService {
+public class WatchlistService {
 
-	private final BookmarkRepository bookmarkRepository;
+	private final WatchlistRepository bookmarkRepository;
 	private final UserRepository userRepository;
 	private final ProductRepository productRepository;
 
@@ -38,7 +38,7 @@ public class BookmarkService {
 				throw new CustomException(ResponseCode.ALREADY_BOOKMARKED);
 			});
 
-		Bookmark bookmark = new Bookmark();
+		Watchlist bookmark = new Watchlist();
 		bookmark.setUser(user);
 		bookmark.setProduct(product);
 		bookmarkRepository.save(bookmark);

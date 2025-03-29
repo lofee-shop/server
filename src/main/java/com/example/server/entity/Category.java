@@ -23,13 +23,16 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
+	@Column(name = "category_id", nullable = false)
 	private Long id;
 
 	@NotNull
-	@Column(nullable = false)
+	@Column(name = "name", nullable = false)
 	private String categoryName;  // 대분류 카테고리 이름
 
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SellerCategory> sellerCategories = new ArrayList<>();
+	
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SubCategory> subCategories = new ArrayList<>();
 }
